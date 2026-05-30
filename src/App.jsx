@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BackgroundCanvas from './components/BackgroundCanvas';
 import ThemeHud from './components/ThemeHud';
-import CustomPlayer from './components/CustomPlayer';
 import TextDistort from './components/TextDistort';
-import TourDates from './components/TourDates';
 import PromoContent from './components/PromoContent';
 import portraitHero from './assets/portrait-hero.jpg';
 import portraitMesh from './assets/portrait-mesh.jpg';
@@ -72,7 +70,6 @@ function App() {
 
       {/* Floating UI HUD elements */}
       <ThemeHud theme={theme} setTheme={setTheme} />
-      <CustomPlayer theme={theme} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
 
       {/* 1. HERO SECTION */}
       <section className="hero-section container">
@@ -182,20 +179,6 @@ function App() {
             </div>
           </div>
 
-          {/* Full profile player */}
-          <div className={`sc-frame ${theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage'}`}>
-            <iframe
-              title="KAS5H on SoundCloud"
-              width="100%"
-              height="450"
-              scrolling="no"
-              frameBorder="no"
-              allow="autoplay"
-              loading="lazy"
-              src={`https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F23528569&color=%23${theme === 'gruvmind' ? '0011ff' : 'ff3300'}&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`}
-            />
-          </div>
-
           <div className="tracks-cta">
             <a
               href="https://soundcloud.com/kas5hmusik"
@@ -211,9 +194,6 @@ function App() {
 
       {/* 4. PROMOTIONAL CONTENT (PRESS KIT) */}
       <PromoContent theme={theme} />
-
-      {/* 5. TOUR DATES SECTION */}
-      <TourDates theme={theme} />
 
       {/* 5. SUB-BRANDS CONCEPT FOCUS */}
       <section style={{ padding: '100px 0' }} id="brands">
