@@ -46,7 +46,7 @@ const Disc = (props) => (
 );
 
 function App() {
-  const [theme, setTheme] = useState('gruvmind'); // 'gruvmind' or 'garagesale'
+  const [theme, setTheme] = useState('garagesale'); // 'garagesale' = KAS5H (dark) · 'gruvmind' = Artist 02 placeholder (light)
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Sync theme class to body
@@ -82,7 +82,7 @@ function App() {
             <h1 className="hero-title font-heading">
               <TextDistort text="KAS5H" theme={theme} />
               <br />
-              <span className="text-stroke">SOUNDSYSTEM</span>
+              <span className="text-stroke">SOUND</span>
             </h1>
 
             <p className="hero-desc">
@@ -195,49 +195,21 @@ function App() {
       {/* 4. PROMOTIONAL CONTENT (PRESS KIT) */}
       <PromoContent theme={theme} />
 
-      {/* 5. SUB-BRANDS CONCEPT FOCUS */}
+      {/* 5. THE ROSTER — two artists / mode switch */}
       <section style={{ padding: '100px 0' }} id="brands">
         <div className="container">
           <div style={{ textAlign: 'left', marginBottom: '60px' }}>
             <h2 className="section-title font-heading">
-              {theme === 'gruvmind' ? '▼ CURATORIAL DEPT' : '▲ THE SUB-BRANDS'}
+              {theme === 'gruvmind' ? '▼ THE ROSTER' : '▲ THE ROSTER'}
             </h2>
             <p className="section-subtitle font-mono">
-              EXPLORE THE CO-FOUNDED BRANDS THAT POWER KAS5H'S SESSIONS
+              TWO ARTISTS // ONE SOUNDSYSTEM — TAP A NAME TO SWITCH THE VIBE
             </p>
           </div>
 
           <div className="brand-showcase-grid" style={{ gap: '48px' }}>
-            {/* Gruvmind Panel */}
-            <div 
-              onClick={() => setTheme('gruvmind')}
-              style={{
-                background: 'rgba(18, 9, 36, 0.4)',
-                border: theme === 'gruvmind' ? '2px solid #39ff14' : '1px solid rgba(167, 139, 250, 0.1)',
-                padding: '32px',
-                borderRadius: '16px',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.4s ease'
-              }}
-              className="brand-panel-gruv"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 className="font-heading" style={{ fontSize: '1.8rem', color: theme === 'gruvmind' ? '#39ff14' : '#fff' }}>
-                  GRUVMIND
-                </h3>
-                <Disc className={theme === 'gruvmind' ? 'glow-accent' : ''} style={{ color: '#39ff14', transform: theme === 'gruvmind' ? 'rotate(360deg)' : 'none', transition: 'transform 2s linear' }} />
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '20px' }}>
-                Co-founded platform concentrating on hypnotic Tech House, Minimal/Deeptech, micro-grooves, and deep room frequency systems.
-              </p>
-              <span className="font-mono" style={{ fontSize: '0.75rem', color: '#39ff14' }}>
-                [ SYSTEM STATUS: SELECTED ]
-              </span>
-            </div>
-
-            {/* Garage Sale Panel */}
-            <div 
+            {/* KAS5H — primary artist (dark / orange) */}
+            <div
               onClick={() => setTheme('garagesale')}
               style={{
                 background: '#121212',
@@ -252,15 +224,43 @@ function App() {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h3 className="font-mono" style={{ fontSize: '1.8rem', color: theme === 'garagesale' ? '#ff5500' : '#fff', fontWeight: 'bold' }}>
-                  GARAGE SALE
+                  KAS5H
                 </h3>
                 <Radio style={{ color: '#ff5500' }} />
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '20px' }}>
-                High-energy rave flyers brought to life. Emphasizing fast UK Garage loops, breakbeats, industrial warning sirens, and hardcore selecta feeds.
+                Delhi-NCR selector &amp; producer. Raw UK garage, fast breaks, deep basslines and gritty rave frequencies built for the underground.
               </p>
               <span className="font-mono" style={{ fontSize: '0.75rem', color: '#ff5500' }}>
-                [ SYSTEM STATUS: READY ]
+                [ SYSTEM STATUS: SELECTED ]
+              </span>
+            </div>
+
+            {/* ARTIST 02 — placeholder (details coming) */}
+            <div
+              onClick={() => setTheme('gruvmind')}
+              style={{
+                background: 'rgba(18, 9, 36, 0.4)',
+                border: theme === 'gruvmind' ? '2px solid #39ff14' : '1px solid rgba(167, 139, 250, 0.1)',
+                padding: '32px',
+                borderRadius: '16px',
+                textAlign: 'left',
+                cursor: 'pointer',
+                transition: 'all 0.4s ease'
+              }}
+              className="brand-panel-gruv"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 className="font-heading" style={{ fontSize: '1.8rem', color: theme === 'gruvmind' ? '#39ff14' : '#fff' }}>
+                  ARTIST 02
+                </h3>
+                <Disc className={theme === 'gruvmind' ? 'glow-accent' : ''} style={{ color: '#39ff14', transform: theme === 'gruvmind' ? 'rotate(360deg)' : 'none', transition: 'transform 2s linear' }} />
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '20px' }}>
+                Profile reserved — name, bio, links and a fresh theme to be added. Send the details and I&apos;ll wire it up.
+              </p>
+              <span className="font-mono" style={{ fontSize: '0.75rem', color: '#39ff14' }}>
+                [ SLOT: RESERVED ]
               </span>
             </div>
           </div>

@@ -111,16 +111,16 @@ const ThemeHud = ({ theme, setTheme }) => {
   return (
     <div className="theme-hud">
       <button
-        onClick={() => handleToggle('gruvmind')}
-        className={`theme-hud-btn ${theme === 'gruvmind' ? 'active' : ''}`}
-      >
-        ● GRUVMIND
-      </button>
-      <button
         onClick={() => handleToggle('garagesale')}
         className={`theme-hud-btn ${theme === 'garagesale' ? 'active' : ''}`}
       >
-        ▲ GARAGE SALE
+        ▲ KAS5H
+      </button>
+      <button
+        onClick={() => handleToggle('gruvmind')}
+        className={`theme-hud-btn ${theme === 'gruvmind' ? 'active' : ''}`}
+      >
+        ● ARTIST 02
       </button>
     </div>
   );

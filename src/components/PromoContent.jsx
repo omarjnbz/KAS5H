@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /*
  * Promotional content (press kit) sourced from KAS5H's public Google Drive folders.
@@ -69,6 +69,8 @@ const downloadUrl = (id) => `https://drive.usercontent.google.com/download?id=${
 const PromoContent = ({ theme }) => {
   const [tab, setTab] = useState('photos');
   const [lightbox, setLightbox] = useState(null); // { type, id, name, label }
+  const [expanded, setExpanded] = useState(false); // false = sliding carousel, true = full grid
+  const trackRef = useRef(null);
 
   // Close lightbox on Escape + lock background scroll while open
   useEffect(() => {
@@ -83,7 +85,73 @@ const PromoContent = ({ theme }) => {
     };
   }, [lightbox]);
 
+  // Switch tab + collapse back to the carousel and reset its scroll position
+  const selectTab = (next) => {
+    setTab(next);
+    setExpanded(false);
+    if (trackRef.current) trackRef.current.scrollLeft = 0;
+  };
+
   const frameClass = theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage';
+
+  // Slide the carousel track left/right by ~one viewport-worth of cards
+  const slide = (dir) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const amount = Math.max(el.clientWidth * 0.85, 260);
+    el.scrollBy({ left: dir * amount, behavior: 'smooth' });
+  };
+
+  const items = tab === 'photos' ? PHOTOS : VIDEOS;
+
+  const renderPhoto = (p, i) => (
+    <figure className="promo-card" key={p.id}>
+      <button
+        type="button"
+        className="promo-thumb"
+        onClick={() => setLightbox({ type: 'photo', img: localPhoto(i), ...p })}
+        aria-label={`Preview ${p.name}`}
+      >
+        <img loading="lazy" src={localPhoto(i)} alt={`KAS5H press shot ${p.name}`} />
+        <span className="promo-zoom font-mono">VIEW</span>
+      </button>
+      <a
+        className="promo-dl font-mono"
+        href={downloadUrl(p.id)}
+        download={p.name}
+        rel="noreferrer"
+      >
+        ↓ DOWNLOAD
+      </a>
+    </figure>
+  );
+
+  const renderVideo = (v, i) => (
+    <figure className="promo-card" key={v.id}>
+      <button
+        type="button"
+        className="promo-thumb promo-thumb--video"
+        onClick={() => setLightbox({ type: 'video', ...v })}
+        aria-label={`Play ${v.label}`}
+      >
+        <img loading="lazy" src={localPoster(i)} alt={`${v.label} poster`} />
+        <span className="promo-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+        </span>
+        <figcaption className="promo-vcap font-mono">{v.label}</figcaption>
+      </button>
+      <a
+        className="promo-dl font-mono"
+        href={downloadUrl(v.id)}
+        download={v.name}
+        rel="noreferrer"
+      >
+        ↓ DOWNLOAD
+      </a>
+    </figure>
+  );
+
+  const renderCard = (it, i) => (tab === 'photos' ? renderPhoto(it, i) : renderVideo(it, i));
 
   return (
     <section className="promo-section" id="press">
@@ -101,74 +169,47 @@ const PromoContent = ({ theme }) => {
         <div className="promo-tabs font-mono">
           <button
             className={`promo-tab ${tab === 'photos' ? 'active' : ''}`}
-            onClick={() => setTab('photos')}
+            onClick={() => selectTab('photos')}
           >
             PHOTOS [{PHOTOS.length}]
           </button>
           <button
             className={`promo-tab ${tab === 'videos' ? 'active' : ''}`}
-            onClick={() => setTab('videos')}
+            onClick={() => selectTab('videos')}
           >
             VIDEOS [{VIDEOS.length}]
           </button>
         </div>
 
-        {/* PHOTOS */}
-        {tab === 'photos' && (
-          <div className="promo-grid">
-            {PHOTOS.map((p, i) => (
-              <figure className="promo-card" key={p.id}>
-                <button
-                  type="button"
-                  className="promo-thumb"
-                  onClick={() => setLightbox({ type: 'photo', img: localPhoto(i), ...p })}
-                  aria-label={`Preview ${p.name}`}
-                >
-                  <img loading="lazy" src={localPhoto(i)} alt={`KAS5H press shot ${p.name}`} />
-                  <span className="promo-zoom font-mono">VIEW</span>
-                </button>
-                <a
-                  className="promo-dl font-mono"
-                  href={downloadUrl(p.id)}
-                  download={p.name}
-                  rel="noreferrer"
-                >
-                  ↓ DOWNLOAD
-                </a>
-              </figure>
-            ))}
+        {/* Sliding carousel (default) OR expanded full grid */}
+        {!expanded ? (
+          <div className="promo-carousel">
+            <button className="promo-arrow" onClick={() => slide(-1)} aria-label="Scroll left">‹</button>
+            <div
+              className={`promo-track ${tab === 'videos' ? 'promo-track--video' : ''}`}
+              ref={trackRef}
+            >
+              {items.map((it, i) => renderCard(it, i))}
+            </div>
+            <button className="promo-arrow" onClick={() => slide(1)} aria-label="Scroll right">›</button>
+          </div>
+        ) : (
+          <div className={`promo-grid ${tab === 'videos' ? 'promo-grid--video' : ''} promo-grid--in`}>
+            {items.map((it, i) => renderCard(it, i))}
           </div>
         )}
 
-        {/* VIDEOS */}
-        {tab === 'videos' && (
-          <div className="promo-grid promo-grid--video">
-            {VIDEOS.map((v, i) => (
-              <figure className="promo-card" key={v.id}>
-                <button
-                  type="button"
-                  className="promo-thumb promo-thumb--video"
-                  onClick={() => setLightbox({ type: 'video', ...v })}
-                  aria-label={`Play ${v.label}`}
-                >
-                  <img loading="lazy" src={localPoster(i)} alt={`${v.label} poster`} />
-                  <span className="promo-play" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                  </span>
-                  <figcaption className="promo-vcap font-mono">{v.label}</figcaption>
-                </button>
-                <a
-                  className="promo-dl font-mono"
-                  href={downloadUrl(v.id)}
-                  download={v.name}
-                  rel="noreferrer"
-                >
-                  ↓ DOWNLOAD
-                </a>
-              </figure>
-            ))}
-          </div>
-        )}
+        {/* Show all / show less */}
+        <div className="promo-expand">
+          <button
+            className="promo-showmore font-mono"
+            onClick={() => setExpanded((v) => !v)}
+          >
+            {expanded
+              ? '▲ SHOW LESS'
+              : `▼ SHOW ALL ${tab === 'photos' ? 'PHOTOS' : 'VIDEOS'} [${items.length}]`}
+          </button>
+        </div>
 
         <div className="promo-foot font-mono">
           <span>NEED MORE? BROWSE THE FULL DRIVE:</span>
@@ -222,6 +263,57 @@ const PromoContent = ({ theme }) => {
         .promo-tab.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
         .promo-tab:not(.active):hover { color: var(--text-primary); border-color: var(--accent); }
 
+        /* ---- Sliding carousel ---- */
+        .promo-carousel { display: flex; align-items: stretch; gap: 10px; }
+        .promo-track {
+          display: flex;
+          gap: 18px;
+          flex: 1 1 auto;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          scroll-behavior: smooth;
+          padding: 4px 2px 16px;
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .promo-track::-webkit-scrollbar { display: none; }
+        .promo-track .promo-card {
+          flex: 0 0 auto;
+          width: clamp(190px, 60vw, 246px);
+          scroll-snap-align: start;
+        }
+        .promo-track--video .promo-card { width: clamp(260px, 82vw, 360px); }
+
+        .promo-arrow {
+          flex: 0 0 auto;
+          align-self: center;
+          width: 44px; height: 64px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1.8rem; line-height: 1; font-weight: 400;
+          background: var(--bg-secondary);
+          color: var(--text-primary);
+          border: 2px solid var(--border-color);
+          cursor: pointer;
+          transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+        .promo-arrow:hover { background: var(--accent); color: var(--bg-primary); transform: scale(1.05); }
+        .promo-arrow:active { transform: scale(0.96); }
+        @media (max-width: 640px) { .promo-arrow { display: none; } }
+
+        .promo-expand { display: flex; justify-content: center; margin-top: 30px; }
+        .promo-showmore {
+          padding: 12px 30px;
+          background: transparent;
+          border: 2px solid var(--accent);
+          color: var(--accent);
+          font-size: 0.8rem; font-weight: 700; letter-spacing: 0.16em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+        .promo-showmore:hover { background: var(--accent); color: var(--bg-primary); box-shadow: 4px 4px 0 var(--text-primary); }
+
+        /* ---- Expanded grid ---- */
         .promo-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -231,6 +323,8 @@ const PromoContent = ({ theme }) => {
         @media (min-width: 1000px) { .promo-grid { grid-template-columns: repeat(4, 1fr); } }
         .promo-grid--video { gap: 24px; }
         @media (min-width: 1000px) { .promo-grid--video { grid-template-columns: repeat(3, 1fr); } }
+        .promo-grid--in { animation: promoGridIn 0.45s var(--transition-ease); }
+        @keyframes promoGridIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
         .promo-card { display: flex; flex-direction: column; gap: 0; margin: 0; }
 
