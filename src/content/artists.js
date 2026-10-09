@@ -131,3 +131,35 @@ export const ARTISTS = {
 };
 
 export const embedSrc = (artist, track, visual = true) => scEmbed(track.id, artist.accentHex, visual);
+
+/*
+ * The record crate. One entry per release or mix; the disc cascade shows the
+ * real cover on each disc and the player under it follows the chosen one.
+ * Add a release by appending: `id` is the SoundCloud track id, `cover` a
+ * 500×500 jpg saved under public/covers (SoundCloud's oEmbed thumbnail_url),
+ * `url` the public track page. Only credits that are actually known go in.
+ */
+export const RELEASES = [
+  {
+    id: '2401966335',
+    title: 'Peculiar EP 1 — Thoughts Are Things',
+    cover: '/covers/peculiar-ep-1.jpg',
+    url: 'https://soundcloud.com/kas5hmusik/peculiar-ep-1-thoughts-are',
+    credits: [
+      { label: 'Artist', value: 'KAS5H' },
+      { label: 'Format', value: 'EP' },
+      { label: 'Series', value: 'Peculiar' },
+    ],
+  },
+  {
+    id: '2229482819',
+    title: 'SPL 012 — Spellbound',
+    cover: '/covers/spl-012.jpg',
+    url: 'https://soundcloud.com/spellbound_minimal/spl-012-kas5h',
+    credits: [
+      { label: 'Artist', value: 'KAS5H' },
+      { label: 'Series', value: 'Spellbound' },
+      { label: 'Format', value: 'Mix' },
+    ],
+  },
+];

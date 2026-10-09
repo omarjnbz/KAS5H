@@ -598,3 +598,68 @@ a:focus-visible, button:focus-visible {
 .site-foot-nav, .site-foot-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; }
 .site-foot-legal { opacity: 0.75; font-size: 0.68rem; margin: 0; }
 .contact a:focus-visible, .contact button:focus-visible { outline-color: var(--bg-primary); }
+
+/* ---------- The crate: disc cascade + transport ---------- */
+.crate {
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  background: rgba(var(--bg-secondary-rgb), 0.5);
+}
+.crate .dcc-root { --color-foreground: var(--text-primary); --color-background: var(--bg-primary); --color-primary: var(--accent); }
+.crate .dcc-title { font-weight: 800; letter-spacing: -0.02em; }
+.crate .dcc-row { border-top-color: rgba(var(--accent-rgb), 0.5); }
+.crate .dcc-hint, .crate .dcc-count { letter-spacing: 0.18em; }
+.crate .dcc-btn { border-radius: 0; border-color: var(--accent); }
+.crate .dcc-btn:hover:not(:disabled) { background: var(--accent); color: var(--bg-primary); }
+.crate .dcc-root, .crate .dcc-slide { cursor: grab; }
+.crate .dcc-slide[data-active] { cursor: pointer; }
+.crate .dcc-root:focus-visible, .crate .dcc-slide:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+
+/* Transport bar — the disc is the play button; this is the readout. */
+.crate-bar {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  grid-template-areas: "play now time out" "bar bar bar bar";
+  align-items: center;
+  gap: 14px 20px;
+  padding: 18px 20px 0;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-top: 0;
+  background: rgba(var(--bg-secondary-rgb), 0.5);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.crate-play {
+  grid-area: play;
+  width: 52px; height: 52px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid var(--accent); background: transparent; color: var(--accent);
+  cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
+}
+.crate-play:hover:not(:disabled), .crate-bar[data-playing] .crate-play { background: var(--accent); color: var(--bg-primary); }
+.crate-play:disabled { opacity: 0.4; cursor: default; }
+.crate-now { grid-area: now; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.crate-now-tag { color: var(--accent); font-size: 0.68rem; }
+.crate-now-title { color: var(--text-primary); font-weight: 700; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crate-time { grid-area: time; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.crate-time-sep { opacity: 0.5; margin: 0 4px; }
+.crate-out { grid-area: out; display: inline-flex; align-items: center; gap: 6px; color: var(--text-primary); text-decoration: none; }
+.crate-out:hover { color: var(--accent); }
+.crate-progress {
+  grid-area: bar; height: 14px; margin: 4px -20px 0; cursor: pointer; position: relative;
+  background: linear-gradient(rgba(var(--accent-rgb), 0.25), rgba(var(--accent-rgb), 0.25)) center / 100% 2px no-repeat;
+}
+.crate-progress-fill {
+  position: absolute; left: 0; top: 50%; height: 2px; width: 100%; margin-top: -1px;
+  background: var(--accent); transform-origin: left; transform: scaleX(0);
+  transition: transform 0.25s linear;
+}
+.crate-bar[data-playing] .crate-progress-fill { box-shadow: 0 0 10px var(--accent); }
+.crate-progress:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.crate-iframe { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
+@media (max-width: 640px) {
+  .crate-bar { grid-template-columns: auto 1fr; grid-template-areas: "play now" "time out" "bar bar"; }
+  .crate-out { justify-self: end; }
+}
+.tracks-cta { margin-top: 28px; }

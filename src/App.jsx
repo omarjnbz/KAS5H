@@ -7,7 +7,10 @@ import Words from './components/Words';
 import TextDistort from './components/TextDistort';
 import PromoContent from './components/PromoContent';
 import Name from './components/Name';
-import { ARTISTS, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
+import DiscCascadeCarousel from './components/DiscCascadeCarousel';
+import CratePlayer from './components/CratePlayer';
+import useSoundCloud from './lib/useSoundCloud';
+import { ARTISTS, RELEASES, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
 import { gsap, ScrollTrigger, initMotion, startLenis, stopLenis } from './motion/motion';
 import portraitHero from './assets/portrait-hero.jpg';
 import portraitMesh from './assets/portrait-mesh.jpg';
@@ -19,6 +22,11 @@ function App() {
   const a = ARTISTS[theme];
   const isM0rf = theme === 'm0rf';
   const root = useRef(null);
+
+  // The crate: which disc is up, and the SoundCloud widget that plays it.
+  const [release, setRelease] = useState(0);
+  const playerFrame = useRef(null);
+  const player = useSoundCloud(playerFrame, RELEASES[release].id);
 
   // Sync theme class to body (index.css keys its variables off these)
   useEffect(() => {
@@ -47,8 +55,20 @@ function App() {
     <div className="landing-wrapper" id="top">
       <div className="noise-overlay" />
       <div className="scanlines" />
-      <BackgroundCanvas theme={theme} isPlaying={false} />
+      <BackgroundCanvas theme={theme} isPlaying={player.playing} />
       <Nav theme={theme} setTheme={setTheme} name={a.name} />
+
+      {/* The real SoundCloud player the crate drives. Outside the themed subtree so
+          switching alias doesn't remount it mid-stream; hidden, never removed. */}
+      <div className="crate-iframe" aria-hidden="true">
+        <iframe
+          ref={playerFrame}
+          title="SoundCloud player"
+          width="100%" height="166" scrolling="no" frameBorder="no"
+          allow="autoplay; encrypted-media"
+          src={embedSrc(ARTISTS.garagesale, RELEASES[0], false)}
+        />
+      </div>
 
       <div ref={root} key={theme}>
         {/* 1. HERO */}
@@ -98,30 +118,31 @@ function App() {
               <p className="section-subtitle font-mono" data-reveal>{a.tracks.subtitle}</p>
             </div>
 
-            {/* Full SoundCloud players — playable in place, not a preview */}
-            <div className="sc-featured" data-reveal>
-              <span className="sc-featured-tag font-mono">{a.tracks.featuredTag}</span>
-              <div className={`sc-frame ${a.frame}`}>
-                <iframe
-                  title={a.tracks.featured.title}
-                  width="100%" height="320" scrolling="no" frameBorder="no"
-                  allow="autoplay; encrypted-media" loading="lazy"
-                  src={embedSrc(a, a.tracks.featured)}
-                />
-              </div>
+            {/* The crate: real covers on the discs; the chosen disc is the play button */}
+            <div className="crate" data-reveal>
+              <DiscCascadeCarousel
+                items={RELEASES.map((r) => ({ title: r.title, credits: r.credits, src: r.cover, alt: `${r.title} cover`, label: '' }))}
+                index={release}
+                onIndexChange={setRelease}
+                onSelect={player.toggle}
+                height="clamp(420px, 62svh, 620px)"
+                discSize="clamp(200px, min(48vmin, 36vw), 400px)"
+                brand=""
+                indexLabel=""
+                reviews={false}
+                frame={false}
+                hint={player.playing ? 'TAP THE DISC TO PAUSE' : 'TAP THE DISC TO PLAY · DRAG TO BROWSE'}
+                background="transparent"
+                color="var(--text-primary)"
+                serif="var(--font-heading)"
+                sans="var(--font-mono)"
+                display="var(--font-mono)"
+                spin={player.playing ? 4 : 0}
+                noun="release"
+                ariaLabel="Releases and mixes"
+              />
             </div>
-
-            <div className="sc-featured sc-also" data-reveal>
-              <span className="sc-featured-tag font-mono">{a.tracks.alsoTag}</span>
-              <div className={`sc-frame ${a.frame}`}>
-                <iframe
-                  title={a.tracks.also.title}
-                  width="100%" height="166" scrolling="no" frameBorder="no"
-                  allow="autoplay; encrypted-media" loading="lazy"
-                  src={embedSrc(a, a.tracks.also, false)}
-                />
-              </div>
-            </div>
+            <CratePlayer track={RELEASES[release]} state={player} marker={a.marker} />
 
             <div className="tracks-cta" data-reveal>
               <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="btn-primary" data-magnetic>
