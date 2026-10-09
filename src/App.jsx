@@ -5,15 +5,14 @@ import Nav from './components/Nav';
 import Ticker from './components/Ticker';
 import Words from './components/Words';
 import TextDistort from './components/TextDistort';
-import PromoContent from './components/PromoContent';
+import PressKit from './components/PressKit';
 import Name from './components/Name';
 import DiscCascadeCarousel from './components/DiscCascadeCarousel';
 import CratePlayer from './components/CratePlayer';
 import useSoundCloud from './lib/useSoundCloud';
-import { ARTISTS, RELEASES, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
+import { ARTISTS, RELEASES, PRESS_KIT, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
 import { gsap, ScrollTrigger, initMotion, startLenis, stopLenis } from './motion/motion';
 import portraitHero from './assets/portrait-hero.jpg';
-import portraitMesh from './assets/portrait-mesh.jpg';
 import djBooth from './assets/dj-booth.png';
 import './App.css';
 
@@ -84,12 +83,18 @@ function App() {
 
               <p className="hero-desc" data-hero-copy>{a.hero.lead}</p>
 
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }} data-hero-cta>
-                <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="btn-primary" data-magnetic>
-                  <Icon icon="logos:soundcloud" width="18" aria-hidden="true" /> SOUNDCLOUD
+              <div className="hero-cta" data-hero-cta>
+                {/* Primary: straight to the crate, playing. Lenis handles the anchor. */}
+                <a
+                  href="#tracks"
+                  className="btn-primary btn-primary--solid"
+                  data-magnetic
+                  onClick={() => { setRelease(0); player.play(); }}
+                >
+                  <Icon icon="solar:play-bold" width="16" aria-hidden="true" /> PLAY THE LATEST
                 </a>
-                <a href={INSTAGRAM} target="_blank" rel="noreferrer" className="btn-primary" data-magnetic>
-                  <Icon icon="logos:instagram-icon" width="16" aria-hidden="true" /> INSTAGRAM
+                <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="hero-link font-mono">
+                  SOUNDCLOUD <Icon icon="solar:arrow-right-up-linear" width="14" aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -153,7 +158,7 @@ function App() {
         </section>
 
         {/* 3. PRESS KIT */}
-        <PromoContent theme={theme} title={a.press.title} />
+        <PressKit title={a.press.title} kit={PRESS_KIT} marker={a.marker} />
 
         {/* 4. BIO — the point of view, after the work */}
         <section className="bio-section chapter chapter--field" id="bio">
@@ -176,37 +181,27 @@ function App() {
         </section>
 
         {/* 5. ALIASES — one artist, two modes */}
-        <section className="roster-section chapter" id="aliases">
-          <div className="container">
-            <div className="brands-header">
-              <Words as="h2" className="section-title font-heading" text={a.roster.title} />
-              <p className="section-subtitle font-mono" data-reveal>{a.roster.subtitle}</p>
-            </div>
-
-            <div className="brand-showcase-grid">
-              {Object.values(ARTISTS).map((art, i) => {
-                const active = art.key === theme;
-                return (
-                  <button
-                    type="button"
-                    key={art.key}
-                    onClick={() => setTheme(art.key)}
-                    className={`alias-card alias-card--${art.key} ${active ? 'is-active' : ''}`}
-                    aria-pressed={active}
-                    data-reveal data-reveal-delay={i * 0.1}
-                  >
-                    <div className="alias-card-head">
-                      <h3 className={art.key === 'm0rf' ? 'font-heading' : 'font-mono'}><Name text={art.name} /></h3>
-                      <Icon icon={art.key === 'm0rf' ? 'solar:vinyl-record-bold' : 'solar:radio-minimalistic-bold'}
-                        width="26" className={art.key === 'm0rf' && active ? 'alias-spin' : ''} aria-hidden="true" />
-                    </div>
-                    <p>{art.card.blurb}</p>
-                    <span className="font-mono alias-status">[ {active ? art.card.status : art.card.standby} ]</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+        <section className="split chapter" id="aliases" aria-labelledby="split-title">
+          <h2 className="sr-only" id="split-title">{a.roster.title}</h2>
+          {Object.values(ARTISTS).map((art) => {
+            const active = art.key === theme;
+            return (
+              <button
+                type="button"
+                key={art.key}
+                onClick={() => setTheme(art.key)}
+                className={`split-half split-half--${art.key} ${active ? 'is-active' : ''}`}
+                aria-pressed={active}
+              >
+                <span className="split-kicker font-mono">{art.marker} {art.card.kicker}</span>
+                <span className={`split-name ${art.key === 'm0rf' ? 'font-heading' : 'font-mono'}`}><Name text={art.name} /></span>
+                <span className="split-line">{art.card.blurb}</span>
+                <span className="split-action font-mono">
+                  {active ? art.card.status : <>SWITCH <Icon icon="solar:arrow-right-linear" width="18" aria-hidden="true" /></>}
+                </span>
+              </button>
+            );
+          })}
         </section>
 
         {/* 6. BOOK FOR — oversized handoff from proof to contact */}
@@ -220,7 +215,12 @@ function App() {
                     href={`mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(`${o.title} — ${a.name}`)}`}
                     className="offer-link font-heading"
                   >
-                    <span className="offer-mask"><span className="offer-text"><Name text={o.title} /></span></span>
+                    <span className="offer-mask">
+                      <span className="offer-text">
+                        <span className="offer-by font-mono"><Name text={o.by} /></span>
+                        <Name text={o.title} />
+                      </span>
+                    </span>
                     <span className="offer-meta font-mono">{o.meta}</span>
                   </a>
                 </li>
@@ -233,7 +233,7 @@ function App() {
         <footer className="contact chapter chapter--signal" id="bookings">
           <div className="container contact-grid">
             <div className="contact-photo" data-clip>
-              <img src={portraitMesh} alt="KAS5H portrait" loading="lazy" data-parallax="0.04" />
+              <img src={portraitHero} alt="KAS5H portrait" loading="lazy" data-parallax="0.04" />
             </div>
 
             <div className="contact-body">

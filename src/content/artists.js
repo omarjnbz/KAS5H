@@ -21,7 +21,7 @@ export const ARTISTS = {
     hudLabel: '▲ KAS5H',
     accentHex: 'ff3300',
     frame: 'frame-garage',
-    ticker: ['ROMANIAN MINIMAL', 'DEEPTECH', 'DEEP HYPNOTIC', 'TECH HOUSE', 'UKG', 'LEFT FIELD', 'MISFIT LABS', 'CELESTIAL DRIFT CIRCLE'],
+    ticker: ['ROMANIAN MINIMAL', 'DEEPTECH', 'DEEP HYPNOTIC', 'TECH HOUSE', 'UKG', 'LEFT FIELD', 'TRANCE TEXTURES', 'ROLLING BASSLINES'],
     hero: {
       kicker: 'DELHI NCR // DJ · SELECTOR · FOUNDER',
       title: 'KAS5H',
@@ -54,15 +54,16 @@ export const ARTISTS = {
       subtitle: 'TAP AN ALIAS TO SWITCH THE SYSTEM',
     },
     card: {
+      kicker: 'THE GROOVE SIDE',
       blurb: 'The groove side. Romanian minimal, deeptech and UKG built on rolling basslines — accessible, hypnotic, made for long nights.',
       status: 'SYSTEM STATUS: SELECTED',
       standby: 'SYSTEM STATUS: STANDBY',
     },
     offers: [
-      { title: 'DJ sets', meta: 'Clubs, warehouses, intimate rooms — Delhi NCR and beyond' },
-      { title: 'Mixes', meta: 'Commissioned mixes, edits and selections' },
-      { title: 'Curation', meta: 'Misfit Labs · Celestial Drift Circle — nights, line-ups, concepts' },
-      { title: 'M0rf', meta: 'The experimental set — IDM, footwork, fractured techno' },
+      { by: 'KAS5H', title: 'DJ sets', meta: 'Clubs, warehouses, intimate rooms — Delhi NCR and beyond' },
+      { by: 'KAS5H', title: 'Mixes', meta: 'Commissioned mixes, edits and selections' },
+      { by: 'KAS5H', title: 'Curation', meta: 'Misfit Labs · Celestial Drift Circle — nights, line-ups, concepts' },
+      { by: 'M0rf', title: 'Sets', meta: 'The experimental set — IDM, footwork, fractured techno' },
     ],
     footer: {
       title: 'BOOKINGS',
@@ -111,15 +112,16 @@ export const ARTISTS = {
       subtitle: 'TAP AN ALIAS TO SWITCH THE SYSTEM',
     },
     card: {
+      kicker: 'THE PRESSURE SIDE',
       blurb: 'The pressure side. IDM, footwork and fractured techno — higher energy, rhythmic left turns, built for curious ears.',
       status: 'SIGNAL: LOCKED',
       standby: 'SIGNAL: DORMANT',
     },
     offers: [
-      { title: 'M0rf sets', meta: 'High-intensity listening — IDM, footwork, fractured techno' },
-      { title: 'Mixes', meta: 'Commissioned mixes for curious ears' },
-      { title: 'Curation', meta: 'Misfit Labs · Celestial Drift Circle — nights, line-ups, concepts' },
-      { title: 'KAS5H', meta: 'The groove set — minimal, deeptech, UKG' },
+      { by: 'M0rf', title: 'Sets', meta: 'High-intensity listening — IDM, footwork, fractured techno' },
+      { by: 'M0rf', title: 'Mixes', meta: 'Commissioned mixes for curious ears' },
+      { by: 'KAS5H', title: 'Curation', meta: 'Misfit Labs · Celestial Drift Circle — nights, line-ups, concepts' },
+      { by: 'KAS5H', title: 'Sets', meta: 'The groove set — minimal, deeptech, UKG' },
     ],
     footer: {
       title: 'BOOKINGS',
@@ -163,3 +165,11 @@ export const RELEASES = [
     ],
   },
 ];
+
+/* Press kit on Drive. Counts are what's in the folders today. */
+export const PRESS_KIT = {
+  photos: 34,
+  videos: 7,
+  photosFolder: 'https://drive.google.com/drive/folders/1yAEKO6m7KmORhViFiVblM_j_0cHQRjr5',
+  videosFolder: 'https://drive.google.com/drive/folders/1-3sSyD6JXhEPba7rLHuBZTPFeZqIs_A4',
+};
