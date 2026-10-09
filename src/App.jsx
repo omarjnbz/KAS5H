@@ -6,8 +6,8 @@ import Ticker from './components/Ticker';
 import Words from './components/Words';
 import TextDistort from './components/TextDistort';
 import PromoContent from './components/PromoContent';
-import DiscCascadeCarousel from './components/DiscCascadeCarousel';
-import { ARTISTS, RELEASES, DISC_PALETTES, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
+import Name from './components/Name';
+import { ARTISTS, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
 import { gsap, ScrollTrigger, initMotion, startLenis, stopLenis } from './motion/motion';
 import portraitHero from './assets/portrait-hero.jpg';
 import portraitMesh from './assets/portrait-mesh.jpg';
@@ -19,7 +19,6 @@ function App() {
   const a = ARTISTS[theme];
   const isM0rf = theme === 'm0rf';
   const root = useRef(null);
-  const [release, setRelease] = useState(0);
 
   // Sync theme class to body (index.css keys its variables off these)
   useEffect(() => {
@@ -119,40 +118,27 @@ function App() {
               <p className="section-subtitle font-mono" data-reveal>{a.tracks.subtitle}</p>
             </div>
 
-            {/* The crate: discs for each release; the player follows the chosen one */}
-            <div className="crate" data-reveal>
-              <DiscCascadeCarousel
-                items={RELEASES.map((r, i) => ({ ...r, palette: DISC_PALETTES[theme][i % DISC_PALETTES[theme].length] }))}
-                index={release}
-                onIndexChange={setRelease}
-                defaultIndex={0}
-                height="clamp(420px, 62svh, 620px)"
-                discSize="clamp(180px, min(46vmin, 34vw), 380px)"
-                brand={a.name}
-                indexLabel=""
-                reviews={false}
-                frame={false}
-                hint="DRAG · ARROWS · SWIPE"
-                background="transparent"
-                color="var(--text-primary)"
-                serif="var(--font-heading)"
-                sans="var(--font-mono)"
-                display="var(--font-mono)"
-                spin={18}
-                noun="release"
-                ariaLabel="Releases and mixes"
-              />
-            </div>
-
+            {/* Full SoundCloud players — playable in place, not a preview */}
             <div className="sc-featured" data-reveal>
-              <span className="sc-featured-tag font-mono">{a.marker} NOW SPINNING // {RELEASES[release].title.toUpperCase()}</span>
+              <span className="sc-featured-tag font-mono">{a.tracks.featuredTag}</span>
               <div className={`sc-frame ${a.frame}`}>
                 <iframe
-                  key={RELEASES[release].id}
-                  title={RELEASES[release].title}
+                  title={a.tracks.featured.title}
+                  width="100%" height="320" scrolling="no" frameBorder="no"
+                  allow="autoplay; encrypted-media" loading="lazy"
+                  src={embedSrc(a, a.tracks.featured)}
+                />
+              </div>
+            </div>
+
+            <div className="sc-featured sc-also" data-reveal>
+              <span className="sc-featured-tag font-mono">{a.tracks.alsoTag}</span>
+              <div className={`sc-frame ${a.frame}`}>
+                <iframe
+                  title={a.tracks.also.title}
                   width="100%" height="166" scrolling="no" frameBorder="no"
                   allow="autoplay; encrypted-media" loading="lazy"
-                  src={embedSrc(a, RELEASES[release], false)}
+                  src={embedSrc(a, a.tracks.also, false)}
                 />
               </div>
             </div>
@@ -189,7 +175,7 @@ function App() {
                     data-reveal data-reveal-delay={i * 0.1}
                   >
                     <div className="alias-card-head">
-                      <h3 className={art.key === 'm0rf' ? 'font-heading' : 'font-mono'}>{art.name}</h3>
+                      <h3 className={art.key === 'm0rf' ? 'font-heading' : 'font-mono'}><Name text={art.name} /></h3>
                       <Icon icon={art.key === 'm0rf' ? 'solar:vinyl-record-bold' : 'solar:radio-minimalistic-bold'}
                         width="26" className={art.key === 'm0rf' && active ? 'alias-spin' : ''} aria-hidden="true" />
                     </div>

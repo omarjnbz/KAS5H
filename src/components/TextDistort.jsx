@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Name from './Name';
 
 const TextDistort = ({ text, theme }) => {
   const [displayText, setDisplayText] = useState(text);
@@ -128,7 +129,7 @@ const TextDistort = ({ text, theme }) => {
         </svg>
       )}
 
-      <span className="distort-content font-heading">{displayText}</span>
+      <span className="distort-content font-heading"><Name text={displayText} /></span>
 
       <style>{`
         .distort-text-wrapper {

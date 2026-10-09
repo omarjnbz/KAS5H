@@ -120,7 +120,7 @@ const ThemeHud = ({ theme, setTheme }) => {
         onClick={() => handleToggle('m0rf')}
         className={`theme-hud-btn ${theme === 'm0rf' ? 'active' : ''}`}
       >
-        ● M0RF
+        ● M<span className="zero">0</span>RF
       </button>
     </div>
   );
