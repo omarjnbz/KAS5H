@@ -90,28 +90,8 @@ function App() {
 
         <Ticker items={a.ticker} marker={a.marker} />
 
-        {/* 2. BIO */}
-        <section className="bio-section" id="bio">
-          <div className="container bio-grid">
-            <div className={`bio-photo-wrap ${a.frame}`} data-clip>
-              <img src={djBooth} alt="KAS5H in the DJ booth" className="bio-photo" loading="lazy" data-parallax="0.06" />
-              <span className="bio-photo-tag font-mono">{a.bio.tag}</span>
-            </div>
-            <div>
-              <p className="bio-paragraph" data-reveal>
-                {a.bio.parts.map(([text, distort], i) =>
-                  distort ? <TextDistort key={i} text={text} theme={theme} /> : <React.Fragment key={i}>{text}</React.Fragment>
-                )}
-              </p>
-              <ul className="bio-credits font-mono" data-reveal data-reveal-delay="0.15">
-                {a.bio.credits.map((c) => <li key={c}>{a.marker} {c}</li>)}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* 3. SOUNDCLOUD */}
-        <section className="tracks-section" id="tracks">
+        {/* 2. THE CRATE — work first */}
+        <section className="tracks-section chapter" id="tracks">
           <div className="container">
             <div className="brands-header">
               <Words as="h2" className="section-title font-heading" text={a.tracks.title} />
@@ -151,11 +131,31 @@ function App() {
           </div>
         </section>
 
-        {/* 4. PRESS KIT */}
+        {/* 3. PRESS KIT */}
         <PromoContent theme={theme} title={a.press.title} />
 
+        {/* 4. BIO — the point of view, after the work */}
+        <section className="bio-section chapter chapter--field" id="bio">
+          <div className="container bio-grid">
+            <div className={`bio-photo-wrap ${a.frame}`} data-clip>
+              <img src={djBooth} alt="KAS5H in the DJ booth" className="bio-photo" loading="lazy" data-parallax="0.06" />
+              <span className="bio-photo-tag font-mono">{a.bio.tag}</span>
+            </div>
+            <div>
+              <p className="bio-paragraph" data-reveal>
+                {a.bio.parts.map(([text, distort], i) =>
+                  distort ? <TextDistort key={i} text={text} theme={theme} /> : <React.Fragment key={i}>{text}</React.Fragment>
+                )}
+              </p>
+              <ul className="bio-credits font-mono" data-reveal data-reveal-delay="0.15">
+                {a.bio.credits.map((c) => <li key={c}>{a.marker} {c}</li>)}
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* 5. ALIASES — one artist, two modes */}
-        <section className="roster-section" id="aliases">
+        <section className="roster-section chapter" id="aliases">
           <div className="container">
             <div className="brands-header">
               <Words as="h2" className="section-title font-heading" text={a.roster.title} />
@@ -188,42 +188,62 @@ function App() {
           </div>
         </section>
 
-        {/* 6. BOOKINGS */}
-        <footer className="footer" id="bookings">
-          <div className="container footer-grid">
-            <div className={`footer-photo-wrap ${a.frame}`} data-clip>
-              <img src={portraitMesh} alt="KAS5H portrait" className="footer-photo" loading="lazy" data-parallax="0.05" />
-              <div className="hero-photo-grain" />
+        {/* 6. BOOK FOR — oversized handoff from proof to contact */}
+        <section className="offer-section chapter chapter--field" id="book" aria-labelledby="offer-title">
+          <div className="container">
+            <p className="section-subtitle font-mono" id="offer-title" data-reveal>{a.marker} BOOK {a.name} FOR</p>
+            <ul className="offer-list">
+              {a.offers.map((o, i) => (
+                <li key={o.title} className="offer-item" data-reveal data-reveal-delay={i * 0.06}>
+                  <a
+                    href={`mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(`${o.title} — ${a.name}`)}`}
+                    className="offer-link font-heading"
+                  >
+                    <span className="offer-mask"><span className="offer-text"><Name text={o.title} /></span></span>
+                    <span className="offer-meta font-mono">{o.meta}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* 7. CONTACT — the signal chapter */}
+        <footer className="contact chapter chapter--signal" id="bookings">
+          <div className="container contact-grid">
+            <div className="contact-photo" data-clip>
+              <img src={portraitMesh} alt="KAS5H portrait" loading="lazy" data-parallax="0.04" />
             </div>
 
-            <div className="footer-body">
-              <h2 className="font-heading" style={{ fontSize: '2.2rem', marginBottom: '16px' }} data-reveal>
+            <div className="contact-body">
+              <p className="contact-kicker font-mono" data-reveal>{a.marker} {a.footer.copy}</p>
+              <h2 className="contact-title font-heading" data-reveal>
                 <TextDistort text={a.footer.title} theme={theme} />
               </h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '32px' }} data-reveal>
-                {a.footer.copy}
-              </p>
-              <div style={{ marginBottom: '16px' }} data-reveal>
-                <a
-                  href={`mailto:${BOOKING_EMAIL}?subject=Booking%20enquiry%20%E2%80%94%20${a.name}`}
-                  className="btn-primary" data-magnetic
-                  style={{ fontSize: '1.1rem', padding: '16px 36px' }}
-                >
-                  <Icon icon="solar:letter-bold" width="20" aria-hidden="true" /> {a.footer.cta}
-                </a>
-              </div>
-              <p className="font-mono footer-email" data-reveal>{BOOKING_EMAIL}</p>
-
-              <nav className="footer-nav" aria-label="Footer" data-reveal>
-                <a href="#bio" className="footer-link">BIO</a>
-                <a href="#tracks" className="footer-link">TRACKS</a>
-                <a href="#press" className="footer-link">PRESS KIT</a>
-                <a href="#aliases" className="footer-link">ALIASES</a>
-                <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="footer-link">SOUNDCLOUD</a>
-              </nav>
-
-              <p className="footer-credit">{a.footer.credit}</p>
+              <a
+                href={`mailto:${BOOKING_EMAIL}?subject=Booking%20enquiry%20%E2%80%94%20${a.name}`}
+                className="contact-cta font-mono" data-magnetic="0.1" data-reveal
+              >
+                <span>{BOOKING_EMAIL}</span>
+                <Icon icon="solar:arrow-right-up-linear" width="28" aria-hidden="true" />
+              </a>
             </div>
+          </div>
+
+          <div className="container site-foot font-mono">
+            <nav className="site-foot-nav" aria-label="Footer">
+              <a href="#tracks">CRATE</a>
+              <a href="#press">PRESS KIT</a>
+              <a href="#bio">BIO</a>
+              <a href="#aliases">ALIASES</a>
+              <a href="#book">BOOK</a>
+            </nav>
+            <div className="site-foot-meta">
+              <span>DELHI NCR, IN</span>
+              <a href={SOUNDCLOUD} target="_blank" rel="noreferrer">SOUNDCLOUD ↗</a>
+              <a href={INSTAGRAM} target="_blank" rel="noreferrer">INSTAGRAM ↗</a>
+            </div>
+            <p className="site-foot-legal">{a.footer.credit}</p>
           </div>
         </footer>
       </div>

@@ -58,6 +58,12 @@ export const ARTISTS = {
       status: 'SYSTEM STATUS: SELECTED',
       standby: 'SYSTEM STATUS: STANDBY',
     },
+    offers: [
+      { title: 'DJ sets', meta: 'Clubs, warehouses, intimate rooms — Delhi NCR and beyond' },
+      { title: 'Mixes', meta: 'Commissioned mixes, edits and selections' },
+      { title: 'Curation', meta: 'Misfit Labs · Celestial Drift Circle — nights, line-ups, concepts' },
+      { title: 'M0rf', meta: 'The experimental set — IDM, footwork, fractured techno' },
+    ],
     footer: {
       title: 'BOOKINGS',
       copy: 'Dates, mixes, curation invites and Delhi underground event info. One inbox for both aliases.',
@@ -109,6 +115,12 @@ export const ARTISTS = {
       status: 'SIGNAL: LOCKED',
       standby: 'SIGNAL: DORMANT',
     },
+    offers: [
+      { title: 'M0rf sets', meta: 'High-intensity listening — IDM, footwork, fractured techno' },
+      { title: 'Mixes', meta: 'Commissioned mixes for curious ears' },
+      { title: 'Curation', meta: 'Misfit Labs · Celestial Drift Circle — nights, line-ups, concepts' },
+      { title: 'KAS5H', meta: 'The groove set — minimal, deeptech, UKG' },
+    ],
     footer: {
       title: 'BOOKINGS',
       copy: 'Dates, mixes, curation invites and Delhi underground event info. One inbox for both aliases.',

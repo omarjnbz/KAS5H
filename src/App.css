@@ -516,3 +516,85 @@ a:focus-visible, button:focus-visible {
   transform: rotate(-32deg);
   pointer-events: none;
 }
+
+/* ======================================================================
+   Editorial chapters — near-black frame, one muted field per chapter,
+   hairline rules, no shadow.
+   ====================================================================== */
+.chapter { border-top: 1px solid rgba(var(--accent-rgb), 0.35); }
+.chapter--field { background: rgba(var(--bg-secondary-rgb), 0.55); }
+.bio-section.chapter--field { border-top: 1px solid rgba(var(--accent-rgb), 0.35); }
+
+/* ---------- Book for: oversized handoff ---------- */
+.offer-section { padding: 96px 0 112px; }
+.offer-list { list-style: none; margin-top: 28px; }
+.offer-item { border-top: 1px solid rgba(var(--accent-rgb), 0.45); }
+.offer-item:last-child { border-bottom: 1px solid rgba(var(--accent-rgb), 0.45); }
+.offer-link {
+  display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 24px;
+  padding: 18px 0; text-decoration: none; color: var(--text-primary);
+}
+.offer-mask { display: block; overflow: hidden; }
+.offer-text {
+  display: block;
+  font-size: clamp(2.6rem, 9vw, 8rem); line-height: 0.95; font-weight: 800;
+  letter-spacing: -0.03em; text-transform: uppercase;
+  transition: color 0.2s ease, transform 0.6s cubic-bezier(.22,.61,.36,1);
+}
+.offer-meta {
+  font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-secondary);
+  max-width: 34ch; text-align: right; transition: color 0.2s ease;
+}
+.offer-link:hover .offer-text, .offer-link:focus-visible .offer-text {
+  color: var(--accent); text-decoration: underline; text-decoration-thickness: 0.06em; text-underline-offset: 0.08em;
+}
+.offer-link:hover .offer-meta, .offer-link:focus-visible .offer-meta { color: var(--text-primary); }
+.offer-link:focus-visible { outline: none; }
+@media (max-width: 640px) {
+  .offer-link { grid-template-columns: 1fr; gap: 8px; }
+  .offer-meta { text-align: left; max-width: none; }
+}
+
+/* ---------- Contact: the signal chapter ---------- */
+.contact {
+  background: var(--accent); color: var(--bg-primary);
+  border-top: 1px solid var(--bg-primary);
+  --text-primary: var(--bg-primary);
+}
+.contact-grid {
+  display: grid; grid-template-columns: 1fr; gap: 40px; align-items: end;
+  padding-top: 96px; padding-bottom: 72px;
+}
+@media (min-width: 900px) { .contact-grid { grid-template-columns: 300px 1fr; gap: 72px; } }
+.contact-photo { width: 100%; max-width: 300px; aspect-ratio: 1 / 1; overflow: hidden; background: var(--bg-primary); }
+.contact-photo img {
+  width: 100%; height: 115%; object-fit: cover; display: block;
+  filter: grayscale(1) contrast(1.15); mix-blend-mode: multiply; opacity: 0.9;
+}
+.contact-kicker { font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; max-width: 46ch; margin-bottom: 20px; }
+.contact-title {
+  font-size: clamp(3.4rem, 13vw, 11rem); line-height: 0.88; letter-spacing: -0.04em;
+  text-transform: uppercase; margin: 0 0 28px;
+}
+.contact .glitch-text:hover, .contact .liquify-text:hover { color: var(--bg-primary); text-shadow: none; }
+.contact-cta {
+  display: inline-flex; align-items: center; gap: 16px;
+  font-size: clamp(1rem, 2.4vw, 1.6rem); letter-spacing: 0.06em; font-weight: 700;
+  color: var(--bg-primary); text-decoration: none;
+  padding: 18px 28px; border: 2px solid var(--bg-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.contact-cta:hover, .contact-cta:focus-visible { background: var(--bg-primary); color: var(--accent); outline: none; }
+
+.site-foot {
+  display: grid; grid-template-columns: 1fr; gap: 16px;
+  padding-top: 24px; padding-bottom: 28px;
+  border-top: 1px solid var(--bg-primary);
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+}
+@media (min-width: 900px) { .site-foot { grid-template-columns: 1fr auto; } .site-foot-legal { grid-column: 1 / -1; } }
+.site-foot a { color: inherit; text-decoration: none; }
+.site-foot a:hover, .site-foot a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+.site-foot-nav, .site-foot-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.site-foot-legal { opacity: 0.75; font-size: 0.68rem; margin: 0; }
+.contact a:focus-visible, .contact button:focus-visible { outline-color: var(--bg-primary); }
