@@ -66,7 +66,7 @@ const localPoster = (i) => `/promo/v${pad(i)}.jpg`;
 const previewSrc = (id) => `https://drive.google.com/file/d/${id}/preview`;
 const downloadUrl = (id) => `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
 
-const PromoContent = ({ theme }) => {
+const PromoContent = ({ theme, title }) => {
   const [tab, setTab] = useState('photos');
   const [lightbox, setLightbox] = useState(null); // { type, id, name, label }
   const [expanded, setExpanded] = useState(false); // false = sliding carousel, true = full grid
@@ -92,7 +92,7 @@ const PromoContent = ({ theme }) => {
     if (trackRef.current) trackRef.current.scrollLeft = 0;
   };
 
-  const frameClass = theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage';
+  const frameClass = theme === 'm0rf' ? 'frame-gruv' : 'frame-garage';
 
   // Slide the carousel track left/right by ~one viewport-worth of cards
   const slide = (dir) => {
@@ -158,7 +158,7 @@ const PromoContent = ({ theme }) => {
       <div className="container">
         <div className="brands-header">
           <h2 className="section-title font-heading">
-            {theme === 'gruvmind' ? '▼ PROMOTIONAL CONTENT' : '▲ PRESS & PROMO KIT'}
+            {title}
           </h2>
           <p className="section-subtitle font-mono">
             DOWNLOAD-READY PRESS SHOTS &amp; PERFORMANCE CLIPS // FREE FOR PROMOTERS, PRESS &amp; PARTNERS

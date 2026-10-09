@@ -243,6 +243,20 @@
   }
 }
 
+.bio-credits {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* SoundCloud Tracks Section */
 .tracks-section {
   padding: 100px 0;
@@ -271,10 +285,63 @@
   margin-bottom: 12px;
 }
 
+.sc-also { margin-bottom: 0; }
+.sc-also .sc-featured-tag { color: var(--text-secondary); }
+
 .tracks-cta {
   margin-top: 28px;
   display: flex;
   justify-content: flex-start;
+}
+
+/* Aliases — one artist, two modes */
+.roster-section {
+  padding: 100px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.alias-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  padding: 32px;
+  text-align: left;
+  font: inherit;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  transition: border-color 0.3s ease, transform 0.3s var(--transition-ease), box-shadow 0.3s ease;
+}
+.alias-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.alias-card.is-active { border: 2px solid var(--accent); box-shadow: 8px 8px 0 var(--accent); }
+.alias-card--m0rf { border-radius: 14px; }
+.alias-card--m0rf.is-active { box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.12); }
+
+.alias-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.alias-card-head h3 { font-size: 1.8rem; font-weight: 800; }
+.alias-card-head svg { color: var(--accent); }
+.alias-card.is-active h3 { color: var(--accent); }
+.alias-card p { color: var(--text-secondary); font-size: 0.95rem; }
+.alias-status { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.1em; }
+
+.alias-spin { animation: aliasSpin 6s linear infinite; }
+@keyframes aliasSpin { to { transform: rotate(360deg); } }
+
+.footer-email {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo-grain, .alias-spin, .ticker-inner { animation: none; }
+  .hero-photo-frame:hover .hero-photo, .promo-thumb:hover img { transform: none; }
 }
 
 /* Sub-Brands Showcase */

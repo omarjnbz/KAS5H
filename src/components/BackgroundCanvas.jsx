@@ -35,7 +35,7 @@ const BackgroundCanvas = ({ theme, isPlaying }) => {
     let glitchTimer = 0;
     let glitches = [];
 
-    const drawGruvmind = (t) => {
+    const drawM0rf = (t) => {
       // Deep tech background
       ctx.fillStyle = '#080312';
       ctx.fillRect(0, 0, width, height);
@@ -230,8 +230,8 @@ const BackgroundCanvas = ({ theme, isPlaying }) => {
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
       mouse.y += (mouse.targetY - mouse.y) * 0.08;
 
-      if (theme === 'gruvmind') {
-        drawGruvmind(time);
+      if (theme === 'm0rf') {
+        drawM0rf(time);
       } else {
         drawGarageSale(time);
       }

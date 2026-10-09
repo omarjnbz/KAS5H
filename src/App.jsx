@@ -3,6 +3,7 @@ import BackgroundCanvas from './components/BackgroundCanvas';
 import ThemeHud from './components/ThemeHud';
 import TextDistort from './components/TextDistort';
 import PromoContent from './components/PromoContent';
+import { ARTISTS, SOUNDCLOUD, INSTAGRAM, BOOKING_EMAIL, embedSrc } from './content/artists';
 import portraitHero from './assets/portrait-hero.jpg';
 import portraitMesh from './assets/portrait-mesh.jpg';
 import djBooth from './assets/dj-booth.png';
@@ -46,264 +47,199 @@ const Disc = (props) => (
 );
 
 function App() {
-  const [theme, setTheme] = useState('garagesale'); // 'garagesale' = KAS5H (dark) · 'gruvmind' = Artist 02 placeholder (light)
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [theme, setTheme] = useState('garagesale');
+  const a = ARTISTS[theme];
+  const isM0rf = theme === 'm0rf';
 
-  // Sync theme class to body
+  // Sync theme class to body (index.css keys its variables off these)
   useEffect(() => {
-    const body = document.body;
-    if (theme === 'garagesale') {
-      body.classList.add('theme-garagesale');
-    } else {
-      body.classList.remove('theme-garagesale');
-    }
-  }, [theme]);
+    document.body.classList.toggle('theme-garagesale', !isM0rf);
+    document.body.classList.toggle('theme-m0rf', isM0rf);
+  }, [isM0rf]);
 
   return (
     <div className="landing-wrapper">
-      {/* Noise and Scanline overlay filters */}
       <div className="noise-overlay" />
       <div className="scanlines" />
-
-      {/* Dynamic Background Canvas */}
-      <BackgroundCanvas theme={theme} isPlaying={isPlaying} />
-
-      {/* Floating UI HUD elements */}
+      <BackgroundCanvas theme={theme} isPlaying={false} />
       <ThemeHud theme={theme} setTheme={setTheme} />
 
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO */}
       <section className="hero-section container">
         <div className="hero-grid">
           <div className="hero-content">
-            <div className="hero-subtitle font-mono">
-              {theme === 'gruvmind' ? '▼ DELHI-NCR // SELECTOR & PRODUCER' : '▲ SYSTEM ACTIVE // UKG - HOUSE - TECHNO'}
-            </div>
+            <div className="hero-subtitle font-mono">{a.marker} {a.hero.kicker}</div>
 
             <h1 className="hero-title font-heading">
-              <TextDistort text="KAS5H" theme={theme} />
+              <TextDistort text={a.hero.title} theme={theme} />
               <br />
-              <span className="text-stroke">SOUND</span>
+              <span className="text-stroke">{a.hero.stroke}</span>
             </h1>
 
-            <p className="hero-desc">
-              {theme === 'gruvmind'
-                ? 'A versatile explorer of minimal tech house, hypnotic rhythms, deep basslines, and subterranean Delhi electronica.'
-                : 'RAW UK GARAGE, FAST-PACED BREAKS, SKELETON GRIDS, AND GRITTY RAVE FREQUENCIES BUILT FOR THE UNDERGROUND.'}
-            </p>
+            <p className="hero-desc">{a.hero.lead}</p>
 
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <a
-                href="https://soundcloud.com/kas5hmusik"
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary"
-              >
+              <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="btn-primary">
                 <Music size={16} /> SOUNDCLOUD
               </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary"
-              >
+              <a href={INSTAGRAM} target="_blank" rel="noreferrer" className="btn-primary">
                 <Instagram size={16} /> INSTAGRAM
               </a>
             </div>
           </div>
 
           <div className="hero-visual">
-            <div className={`hero-photo-frame ${theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage'}`}>
-              <img src={portraitHero} alt="KAS5H — Delhi NCR selector & producer" className="hero-photo" />
+            <div className={`hero-photo-frame ${a.frame}`}>
+              <img src={portraitHero} alt="KAS5H — Delhi NCR DJ and selector" className="hero-photo" />
               <div className="hero-photo-grain" />
               <div className="hero-photo-brackets">
                 <span className="bk bk-tl" /><span className="bk bk-tr" />
                 <span className="bk bk-bl" /><span className="bk bk-br" />
               </div>
-              <span className="hero-photo-tag font-mono">
-                {theme === 'gruvmind' ? 'PORTRAIT_01 // SELECTOR' : 'SUBJECT_LOCKED // KAS5H'}
-              </span>
+              <span className="hero-photo-tag font-mono">{a.hero.tag}</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. INTERACTIVE BIO SECTION */}
-      <section className="bio-section">
+      {/* 2. BIO */}
+      <section className="bio-section" id="bio">
         <div className="container bio-grid">
-          <div className={`bio-photo-wrap ${theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage'}`}>
+          <div className={`bio-photo-wrap ${a.frame}`}>
             <img src={djBooth} alt="KAS5H in the DJ booth" className="bio-photo" />
-            <span className="bio-photo-tag font-mono">LIVE // IN THE BOOTH</span>
+            <span className="bio-photo-tag font-mono">{a.bio.tag}</span>
           </div>
-          <p className="bio-paragraph">
-            Versatile, forward-thinking sound that traverses{' '}
-            <TextDistort text="Tech House" theme={theme} />,{' '}
-            <TextDistort text="Minimal/Deeptech" theme={theme} />,{' '}
-            <TextDistort text="Techno" theme={theme} />,{' '}
-            <TextDistort text="IDM" theme={theme} />,{' '}
-            <TextDistort text="Footwork" theme={theme} />,{' '}
-            <TextDistort text="UK Garage" theme={theme} />, and{' '}
-            <TextDistort text="DnB" theme={theme} />. Through rotating curation hubs,{' '}
-            <span style={{ color: 'var(--accent)' }}>KAS5H</span> creates immersive sonic pathways, connecting Delhi’s underground electronic architecture directly to global warehouse cultures.
-          </p>
+          <div>
+            <p className="bio-paragraph">
+              {a.bio.parts.map(([text, distort], i) =>
+                distort ? <TextDistort key={i} text={text} theme={theme} /> : <React.Fragment key={i}>{text}</React.Fragment>
+              )}
+            </p>
+            <ul className="bio-credits font-mono">
+              {a.bio.credits.map((c) => <li key={c}>{a.marker} {c}</li>)}
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* 3. SOUNDCLOUD TRACKS SECTION */}
+      {/* 3. SOUNDCLOUD */}
       <section className="tracks-section" id="tracks">
         <div className="container">
           <div className="brands-header">
-            <h2 className="section-title font-heading">
-              {theme === 'gruvmind' ? '▼ SELECTED TRANSMISSIONS' : '▲ THE RECORD CRATE'}
-            </h2>
-            <p className="section-subtitle font-mono">
-              LIVE FROM SOUNDCLOUD // KAS5H MIXES, EDITS &amp; SELECTIONS
-            </p>
+            <h2 className="section-title font-heading">{a.tracks.title}</h2>
+            <p className="section-subtitle font-mono">{a.tracks.subtitle}</p>
           </div>
 
-          {/* Featured release */}
           <div className="sc-featured">
-            <span className="sc-featured-tag font-mono">
-              {theme === 'gruvmind' ? '★ FEATURED RELEASE' : '★ NOW SPINNING'} // SPL 012 — KAS5H
-            </span>
-            <div className={`sc-frame ${theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage'}`}>
+            <span className="sc-featured-tag font-mono">{a.tracks.featuredTag}</span>
+            <div className={`sc-frame ${a.frame}`}>
               <iframe
-                title="SPL 012 - KAS5H (Spellbound)"
+                title={a.tracks.featured.title}
                 width="100%"
                 height="320"
                 scrolling="no"
                 frameBorder="no"
-                allow="autoplay"
+                allow="autoplay; encrypted-media"
                 loading="lazy"
-                src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2229482819&color=%23${theme === 'gruvmind' ? '0011ff' : 'ff3300'}&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`}
+                src={embedSrc(a, a.tracks.featured)}
+              />
+            </div>
+          </div>
+
+          <div className="sc-featured sc-also">
+            <span className="sc-featured-tag font-mono">{a.tracks.alsoTag}</span>
+            <div className={`sc-frame ${a.frame}`}>
+              <iframe
+                title={a.tracks.also.title}
+                width="100%"
+                height="166"
+                scrolling="no"
+                frameBorder="no"
+                allow="autoplay; encrypted-media"
+                loading="lazy"
+                src={embedSrc(a, a.tracks.also, false)}
               />
             </div>
           </div>
 
           <div className="tracks-cta">
-            <a
-              href="https://soundcloud.com/kas5hmusik"
-              target="_blank"
-              rel="noreferrer"
-              className="btn-primary"
-            >
+            <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="btn-primary">
               <Music size={16} /> FULL PROFILE ON SOUNDCLOUD
             </a>
           </div>
         </div>
       </section>
 
-      {/* 4. PROMOTIONAL CONTENT (PRESS KIT) */}
-      <PromoContent theme={theme} />
+      {/* 4. PRESS KIT */}
+      <PromoContent theme={theme} title={a.press.title} />
 
-      {/* 5. THE ROSTER — two artists / mode switch */}
-      <section style={{ padding: '100px 0' }} id="brands">
+      {/* 5. ALIASES — one artist, two modes */}
+      <section className="roster-section" id="aliases">
         <div className="container">
-          <div style={{ textAlign: 'left', marginBottom: '60px' }}>
-            <h2 className="section-title font-heading">
-              {theme === 'gruvmind' ? '▼ THE ROSTER' : '▲ THE ROSTER'}
-            </h2>
-            <p className="section-subtitle font-mono">
-              TWO ARTISTS // ONE SOUNDSYSTEM — TAP A NAME TO SWITCH THE VIBE
-            </p>
+          <div className="brands-header">
+            <h2 className="section-title font-heading">{a.roster.title}</h2>
+            <p className="section-subtitle font-mono">{a.roster.subtitle}</p>
           </div>
 
-          <div className="brand-showcase-grid" style={{ gap: '48px' }}>
-            {/* KAS5H — primary artist (dark / orange) */}
-            <div
-              onClick={() => setTheme('garagesale')}
-              style={{
-                background: '#121212',
-                border: theme === 'garagesale' ? '2px solid #ff5500' : '1px solid rgba(255, 85, 0, 0.1)',
-                padding: '32px',
-                borderRadius: '0px',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.4s ease'
-              }}
-              className="brand-panel-garage"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 className="font-mono" style={{ fontSize: '1.8rem', color: theme === 'garagesale' ? '#ff5500' : '#fff', fontWeight: 'bold' }}>
-                  KAS5H
-                </h3>
-                <Radio style={{ color: '#ff5500' }} />
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '20px' }}>
-                Delhi-NCR selector &amp; producer. Raw UK garage, fast breaks, deep basslines and gritty rave frequencies built for the underground.
-              </p>
-              <span className="font-mono" style={{ fontSize: '0.75rem', color: '#ff5500' }}>
-                [ SYSTEM STATUS: SELECTED ]
-              </span>
-            </div>
-
-            {/* ARTIST 02 — placeholder (details coming) */}
-            <div
-              onClick={() => setTheme('gruvmind')}
-              style={{
-                background: 'rgba(18, 9, 36, 0.4)',
-                border: theme === 'gruvmind' ? '2px solid #39ff14' : '1px solid rgba(167, 139, 250, 0.1)',
-                padding: '32px',
-                borderRadius: '16px',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.4s ease'
-              }}
-              className="brand-panel-gruv"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 className="font-heading" style={{ fontSize: '1.8rem', color: theme === 'gruvmind' ? '#39ff14' : '#fff' }}>
-                  ARTIST 02
-                </h3>
-                <Disc className={theme === 'gruvmind' ? 'glow-accent' : ''} style={{ color: '#39ff14', transform: theme === 'gruvmind' ? 'rotate(360deg)' : 'none', transition: 'transform 2s linear' }} />
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '20px' }}>
-                Profile reserved — name, bio, links and a fresh theme to be added. Send the details and I&apos;ll wire it up.
-              </p>
-              <span className="font-mono" style={{ fontSize: '0.75rem', color: '#39ff14' }}>
-                [ SLOT: RESERVED ]
-              </span>
-            </div>
+          <div className="brand-showcase-grid">
+            {Object.values(ARTISTS).map((art) => {
+              const active = art.key === theme;
+              return (
+                <button
+                  type="button"
+                  key={art.key}
+                  onClick={() => setTheme(art.key)}
+                  className={`alias-card alias-card--${art.key} ${active ? 'is-active' : ''}`}
+                  aria-pressed={active}
+                >
+                  <div className="alias-card-head">
+                    <h3 className={art.key === 'm0rf' ? 'font-heading' : 'font-mono'}>{art.name}</h3>
+                    {art.key === 'm0rf' ? <Disc className={active ? 'alias-spin' : ''} /> : <Radio />}
+                  </div>
+                  <p>{art.card.blurb}</p>
+                  <span className="font-mono alias-status">[ {active ? art.card.status : art.card.standby} ]</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* 6. BOOKINGS & CONTACT FOOTER */}
+      {/* 6. BOOKINGS */}
       <footer className="footer" id="bookings">
         <div className="container footer-grid">
-          <div className={`footer-photo-wrap ${theme === 'gruvmind' ? 'frame-gruv' : 'frame-garage'}`}>
+          <div className={`footer-photo-wrap ${a.frame}`}>
             <img src={portraitMesh} alt="KAS5H portrait" className="footer-photo" />
             <div className="hero-photo-grain" />
           </div>
 
           <div className="footer-body">
             <h2 className="font-heading" style={{ fontSize: '2.2rem', marginBottom: '16px' }}>
-              <TextDistort text="BOOKINGS" theme={theme} />
+              <TextDistort text={a.footer.title} theme={theme} />
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '32px' }}>
-              Contact dispatch for dates, mixes, curation invites, and Delhi underground event info.
+              {a.footer.copy}
             </p>
-            <div style={{ marginBottom: '40px' }}>
+            <div style={{ marginBottom: '16px' }}>
               <a
-                href="mailto:bookings@kas5hmusik.com"
-                onClick={(e) => { e.preventDefault(); alert("EMAIL DISPATCH: bookings@kas5hmusik.com"); }}
+                href={`mailto:${BOOKING_EMAIL}?subject=Booking%20enquiry%20%E2%80%94%20${a.name}`}
                 className="btn-primary"
                 style={{ fontSize: '1.1rem', padding: '16px 36px' }}
               >
-                <Mail size={18} /> DISPATCH AGENT
+                <Mail size={18} /> {a.footer.cta}
               </a>
             </div>
+            <p className="font-mono footer-email">{BOOKING_EMAIL}</p>
 
             <div className="footer-nav">
+              <a href="#bio" className="footer-link">BIO</a>
               <a href="#tracks" className="footer-link">TRACKS</a>
               <a href="#press" className="footer-link">PRESS KIT</a>
-              <a href="#brands" className="footer-link">BRANDS</a>
-              <a href="#bookings" className="footer-link">CONTACT</a>
-              <a href="https://soundcloud.com/kas5hmusik" target="_blank" rel="noreferrer" className="footer-link">SOUNDCLOUD</a>
+              <a href="#aliases" className="footer-link">ALIASES</a>
+              <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="footer-link">SOUNDCLOUD</a>
             </div>
 
-            <p className="footer-credit">
-              © 2026 KAS5H MUSIC // DESIGNED BY ANTIGRAVITY SYSTEMS V1.0
-            </p>
+            <p className="footer-credit">{a.footer.credit}</p>
           </div>
         </div>
       </footer>

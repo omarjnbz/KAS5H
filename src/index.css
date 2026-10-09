@@ -2,16 +2,17 @@
 
 /* Avant-Garde Flyer Design System */
 :root {
-  /* Default: Gruvmind Poster theme values (Cobalt & White Flyer) */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f4f4f4;
-  --bg-secondary-rgb: 244, 244, 244;
-  --text-primary: #000000;
-  --text-secondary: #555555;
-  --accent: #0011ff; /* Electric Cobalt Blue */
-  --accent-rgb: 0, 17, 255;
-  --accent-glowing: #0088ff;
-  --border-color: #0011ff;
+  /* Default = M0rf: void violet + acid green. Matches the canvas, which has
+     always drawn dark for this alias — the old white poster theme fought it. */
+  --bg-primary: #07040f;
+  --bg-secondary: #120924;
+  --bg-secondary-rgb: 18, 9, 36;
+  --text-primary: #f2eefc;
+  --text-secondary: #9b93b3;
+  --accent: #39ff14; /* Acid green */
+  --accent-rgb: 57, 255, 20;
+  --accent-glowing: #a78bfa; /* Violet */
+  --border-color: #39ff14;
   
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Outfit', sans-serif;
@@ -142,8 +143,8 @@ html, body {
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.05) 50%
+    rgba(18, 16, 16, 0) 50%,
+    rgba(57, 255, 20, 0.04) 50%
   );
   background-size: 100% 6px;
   z-index: 999;

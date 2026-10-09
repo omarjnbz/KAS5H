@@ -94,7 +94,7 @@ const ThemeHud = ({ theme, setTheme }) => {
     if (targetTheme === 'garagesale') {
       flash.style.backgroundColor = '#ff5500';
     } else {
-      flash.style.backgroundColor = '#a78bfa';
+      flash.style.backgroundColor = '#39ff14';
     }
     
     document.body.appendChild(flash);
@@ -117,10 +117,10 @@ const ThemeHud = ({ theme, setTheme }) => {
         ▲ KAS5H
       </button>
       <button
-        onClick={() => handleToggle('gruvmind')}
-        className={`theme-hud-btn ${theme === 'gruvmind' ? 'active' : ''}`}
+        onClick={() => handleToggle('m0rf')}
+        className={`theme-hud-btn ${theme === 'm0rf' ? 'active' : ''}`}
       >
-        ● ARTIST 02
+        ● M0RF
       </button>
     </div>
   );

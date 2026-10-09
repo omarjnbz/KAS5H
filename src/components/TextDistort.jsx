@@ -13,7 +13,7 @@ const TextDistort = ({ text, theme }) => {
 
   // SVG displacement filter scaling for Gruvmind
   const triggerLiquify = () => {
-    if (theme !== 'gruvmind' || !filterRef.current) return;
+    if (theme !== 'm0rf' || !filterRef.current) return;
     
     // Animate displacement map scale using GSAP
     gsap.killTweensOf(filterRef.current);
@@ -63,7 +63,7 @@ const TextDistort = ({ text, theme }) => {
   };
 
   const handleMouseEnter = () => {
-    if (theme === 'gruvmind') {
+    if (theme === 'm0rf') {
       triggerLiquify();
     } else {
       triggerGlitch();
@@ -71,7 +71,7 @@ const TextDistort = ({ text, theme }) => {
   };
 
   const handleMouseLeave = () => {
-    if (theme === 'gruvmind' && filterRef.current) {
+    if (theme === 'm0rf' && filterRef.current) {
       gsap.to(filterRef.current, {
         attr: { scale: 0 },
         duration: 0.4,
@@ -99,15 +99,15 @@ const TextDistort = ({ text, theme }) => {
       ref={containerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`distort-text-wrapper ${theme === 'gruvmind' ? 'liquify-text' : 'glitch-text'}`}
+      className={`distort-text-wrapper ${theme === 'm0rf' ? 'liquify-text' : 'glitch-text'}`}
       style={{
-        filter: theme === 'gruvmind' ? `url(#${filterId.current})` : 'none',
+        filter: theme === 'm0rf' ? `url(#${filterId.current})` : 'none',
         display: 'inline-block',
         position: 'relative'
       }}
     >
       {/* SVG filter definition (renders inline) */}
-      {theme === 'gruvmind' && (
+      {theme === 'm0rf' && (
         <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
           <defs>
             <filter id={filterId.current} x="-20%" y="-20%" width="140%" height="140%">
