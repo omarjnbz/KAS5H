@@ -439,3 +439,59 @@
   letter-spacing: 0.05em;
   font-family: var(--font-mono);
 }
+
+/* ---------- Nav ---------- */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 18px 24px; pointer-events: none;
+}
+.site-nav > * { pointer-events: auto; }
+.site-nav .theme-hud { position: static; transform: none; }
+.site-nav-mark, .site-nav-cta {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none; color: var(--text-primary); padding: 10px 0;
+}
+.site-nav-cta { justify-self: end; color: var(--accent); }
+.site-nav-mark:hover, .site-nav-cta:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 6px; }
+@media (max-width: 640px) {
+  .site-nav { grid-template-columns: 1fr auto; }
+  .site-nav-cta { display: none; }
+}
+
+/* ---------- Hero sizing / masks ---------- */
+.hero-title { font-size: clamp(3.2rem, 11vw, 9.5rem); line-height: 0.92; }
+.hero-title > * { display: block; }
+[data-hero-title] { overflow: hidden; }
+[data-hero-media] { will-change: clip-path; }
+
+/* ---------- Word reveals ---------- */
+.w-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.w { display: inline-block; will-change: transform, opacity; }
+
+/* With motion active, hold the initial state so there is no flash before GSAP
+   takes over. Without JS (no .has-motion) everything is simply visible. */
+html.has-motion [data-words] .w,
+html.has-motion [data-reveal] { opacity: 0; visibility: hidden; }
+html.has-motion [data-clip] { clip-path: inset(0 0 100% 0); }
+html.has-motion [data-hero-kicker],
+html.has-motion [data-hero-copy],
+html.has-motion [data-hero-cta] > * { opacity: 0; visibility: hidden; }
+html.has-motion [data-hero-title] > * { transform: translateY(110%); }
+
+/* ---------- Ticker ---------- */
+.ticker-wrap { font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-primary); }
+.ticker-inner span { padding-right: 3rem; }
+.ticker-inner span::before { content: ''; }
+
+/* ---------- Focus ---------- */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.has-motion [data-words] .w, html.has-motion [data-reveal],
+  html.has-motion [data-hero-kicker], html.has-motion [data-hero-copy], html.has-motion [data-hero-cta] > * { opacity: 1; visibility: visible; }
+  html.has-motion [data-clip] { clip-path: none; }
+  html.has-motion [data-hero-title] > * { transform: none; }
+}

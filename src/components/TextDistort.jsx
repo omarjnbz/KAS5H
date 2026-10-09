@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 const TextDistort = ({ text, theme }) => {
@@ -8,8 +8,6 @@ const TextDistort = ({ text, theme }) => {
   const animationRef = useRef(null);
   const isHovered = useRef(false);
 
-  // Split words or characters
-  const words = text.split(' ');
 
   // SVG displacement filter scaling for Gruvmind
   const triggerLiquify = () => {

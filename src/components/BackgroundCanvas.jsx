@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const BackgroundCanvas = ({ theme, isPlaying }) => {
   const canvasRef = useRef(null);

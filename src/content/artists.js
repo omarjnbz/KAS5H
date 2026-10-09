@@ -21,6 +21,7 @@ export const ARTISTS = {
     hudLabel: '▲ KAS5H',
     accentHex: 'ff3300',
     frame: 'frame-garage',
+    ticker: ['ROMANIAN MINIMAL', 'DEEPTECH', 'DEEP HYPNOTIC', 'TECH HOUSE', 'UKG', 'LEFT FIELD', 'MISFIT LABS', 'CELESTIAL DRIFT CIRCLE'],
     hero: {
       kicker: 'DELHI NCR // DJ · SELECTOR · FOUNDER',
       title: 'KAS5H',
@@ -72,6 +73,7 @@ export const ARTISTS = {
     hudLabel: '● M0RF',
     accentHex: '39ff14',
     frame: 'frame-gruv',
+    ticker: ['IDM', 'BASS PRESSURE', 'FOOTWORK', 'FRACTURED TECHNO', 'LEFT TURNS', 'HIGH INTENSITY', 'CURIOUS EARS'],
     hero: {
       kicker: 'ALIAS OF KAS5H // EXPERIMENTAL CLUB',
       title: 'M0RF',

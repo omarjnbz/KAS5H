@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ThemeHud = ({ theme, setTheme }) => {
   // Mechanical synthesizer click sound effect using Web Audio API
   const playClickSound = (targetTheme) => {
@@ -111,12 +109,14 @@ const ThemeHud = ({ theme, setTheme }) => {
   return (
     <div className="theme-hud">
       <button
+        data-magnetic="0.12"
         onClick={() => handleToggle('garagesale')}
         className={`theme-hud-btn ${theme === 'garagesale' ? 'active' : ''}`}
       >
         ▲ KAS5H
       </button>
       <button
+        data-magnetic="0.12"
         onClick={() => handleToggle('m0rf')}
         className={`theme-hud-btn ${theme === 'm0rf' ? 'active' : ''}`}
       >
