@@ -52,7 +52,7 @@ export function initMotion(root) {
   if (hero) {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
     tl.fromTo(q('[data-hero-media]'), { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.2 }, 0)
-      .fromTo(q('[data-hero-media] img'), { scale: 1.12 }, { scale: 1, duration: 1.5 }, 0)
+      .fromTo(q('[data-hero-media] .hero-photo'), { scale: 1.12 }, { scale: 1, duration: 1.5 }, 0)
       .fromTo(q('[data-hero-kicker]'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.25)
       .fromTo(q('[data-hero-title] > *'), { yPercent: 110 }, { yPercent: 0, duration: 1, stagger: 0.09 }, 0.35)
       .fromTo(q('[data-hero-copy]'), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 0.75)

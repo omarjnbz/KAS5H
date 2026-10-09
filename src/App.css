@@ -66,6 +66,7 @@
   transition: transform 0.8s var(--transition-ease), filter var(--transition-speed) var(--transition-ease);
 }
 
+video.hero-photo { background: #05060a; }
 .hero-photo-frame:hover .hero-photo {
   transform: scale(1.04);
 }

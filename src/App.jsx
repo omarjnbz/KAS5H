@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import BackgroundCanvas from './components/BackgroundCanvas';
 import Nav from './components/Nav';
@@ -21,6 +21,7 @@ function App() {
   const a = ARTISTS[theme];
   const isM0rf = theme === 'm0rf';
   const root = useRef(null);
+  const reduceMotion = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
 
   // The crate: which disc is up, and the SoundCloud widget that plays it.
   const [release, setRelease] = useState(0);
@@ -101,7 +102,20 @@ function App() {
 
             <div className="hero-visual" data-depth="0.025">
               <div className={`hero-photo-frame ${a.frame}`} data-hero-media>
-                <img src={portraitHero} alt="KAS5H — Delhi NCR DJ and selector" className="hero-photo" fetchPriority="high" />
+                {/* The promo loop (rendered from ../kas5h-video). Muted, so it may autoplay;
+                    the portrait is the poster and the whole fallback when motion is off. */}
+                {reduceMotion ? (
+                  <img src={portraitHero} alt="KAS5H — Delhi NCR DJ and selector" className="hero-photo" fetchPriority="high" />
+                ) : (
+                  <video
+                    className="hero-photo"
+                    src="/promo.mp4"
+                    poster={portraitHero}
+                    autoPlay muted loop playsInline
+                    preload="auto"
+                    aria-label="KAS5H — Peculiar EP 1 promo loop"
+                  />
+                )}
                 <div className="hero-photo-grain" />
                 <div className="hero-photo-brackets">
                   <span className="bk bk-tl" /><span className="bk bk-tr" />
