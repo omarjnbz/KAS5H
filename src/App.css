@@ -495,3 +495,18 @@ a:focus-visible, button:focus-visible {
   html.has-motion [data-clip] { clip-path: none; }
   html.has-motion [data-hero-title] > * { transform: none; }
 }
+
+/* ---------- The crate (disc cascade) ---------- */
+.crate {
+  margin-bottom: 32px;
+  border: 1px solid var(--border-color);
+  background: rgba(var(--bg-secondary-rgb), 0.5);
+}
+.crate .dcc-root { --color-foreground: var(--text-primary); --color-background: var(--bg-primary); --color-primary: var(--accent); }
+.crate .dcc-title { font-weight: 800; letter-spacing: -0.02em; }
+.crate .dcc-row { border-top-color: rgba(var(--accent-rgb), 0.5); }
+.crate .dcc-brand { color: var(--accent); }
+.crate .dcc-hint, .crate .dcc-count { letter-spacing: 0.18em; }
+.crate .dcc-btn { border-radius: 0; border-color: var(--accent); }
+.crate .dcc-btn:hover:not(:disabled) { background: var(--accent); color: var(--bg-primary); }
+.crate .dcc-root, .crate .dcc-slide { cursor: grab; }

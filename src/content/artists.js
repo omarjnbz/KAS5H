@@ -119,3 +119,40 @@ export const ARTISTS = {
 };
 
 export const embedSrc = (artist, track, visual = true) => scEmbed(track.id, artist.accentHex, visual);
+
+/*
+ * The record crate. One entry per release or mix; the disc cascade reads this
+ * list in order and the player under it follows the chosen disc. Add a release
+ * by appending an object — `id` is the SoundCloud track id from the embed URL.
+ * Only credits that are actually known go in; nothing is invented.
+ */
+export const RELEASES = [
+  {
+    id: '2401966335',
+    title: 'Peculiar EP 1 — Thoughts Are Things',
+    label: 'PECULIAR EP 1',
+    pattern: 'eclipse',
+    credits: [
+      { label: 'Artist', value: 'KAS5H' },
+      { label: 'Format', value: 'EP' },
+      { label: 'On', value: 'SoundCloud' },
+    ],
+  },
+  {
+    id: '2229482819',
+    title: 'SPL 012 — Spellbound',
+    label: 'SPL 012',
+    pattern: 'rings',
+    credits: [
+      { label: 'Artist', value: 'KAS5H' },
+      { label: 'Series', value: 'Spellbound' },
+      { label: 'Format', value: 'Mix' },
+    ],
+  },
+];
+
+/* Disc label palettes per alias: [ground, figure, accent]. */
+export const DISC_PALETTES = {
+  garagesale: [['#0a0a0a', '#ff3300', '#f2f2f2'], ['#ff3300', '#0a0a0a', '#fff100'], ['#1a1a1a', '#f2f2f2', '#ff3300']],
+  m0rf: [['#07040f', '#39ff14', '#a78bfa'], ['#39ff14', '#07040f', '#a78bfa'], ['#120924', '#a78bfa', '#39ff14']],
+};
