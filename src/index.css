@@ -1,26 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;700&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;700&family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap');
 
 /* Avant-Garde Flyer Design System */
 :root {
-  /* Default = M0rf: void violet + acid green. Matches the canvas, which has
-     always drawn dark for this alias — the old white poster theme fought it. */
-  --bg-primary: #07040f;
-  --bg-secondary: #120924;
-  --bg-secondary-rgb: 18, 9, 36;
-  --text-primary: #f2eefc;
-  --text-secondary: #9b93b3;
-  --accent: #39ff14; /* Acid green */
-  --accent-rgb: 57, 255, 20;
-  --accent-glowing: #a78bfa; /* Violet */
-  --border-color: #39ff14;
-  
+  /* Default = M0rf: a cold day-lab. Ice white, ink and ultraviolet, with lilac
+     as the second light, taken from his blue-white studio shoot. The inverse
+     of KAS5H's night: same selector, other signal. */
+  --bg-primary: #eceff4;
+  --bg-secondary: #dfe3eb;
+  --bg-secondary-rgb: 223, 227, 235;
+  --text-primary: #0b0c14;
+  --text-secondary: #545b6b;
+  --accent: #4422ff; /* Ultraviolet */
+  --accent-rgb: 68, 34, 255;
+  --accent-glowing: #b7a4ff; /* Lilac */
+  --border-color: #0b0c14;
+
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Outfit', sans-serif;
-  --font-mono: 'Space Grotesk', monospace;
-  
+  --font-mono: 'Space Mono', monospace;
+
   --transition-speed: 0.4s;
   --transition-ease: cubic-bezier(0.25, 1, 0.5, 1);
-  --noise-opacity: 0.08;
+  --noise-opacity: 0.05;
 }
 
 /* Garage Sale Theme Override (Dark Industrial Orange) */
@@ -143,10 +144,10 @@ html, body {
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%,
-    rgba(57, 255, 20, 0.04) 50%
+    rgba(0, 0, 0, 0) 50%,
+    rgba(68, 34, 255, 0.035) 50%
   );
-  background-size: 100% 6px;
+  background-size: 100% 3px;
   z-index: 999;
   pointer-events: none;
   opacity: 0.6;

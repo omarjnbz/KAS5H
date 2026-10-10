@@ -36,15 +36,41 @@ export function stopLenis() {
   document.documentElement.classList.remove('has-motion');
 }
 
-/* Runs inside a gsap.context scoped to `root`; caller reverts on cleanup. */
+/* Jump (no easing) to a page offset, through Lenis when it's running. */
+export function jumpTo(y) {
+  if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+  else window.scrollTo(0, y);
+}
+
+/* Hold the page still under a modal, and let it go again. */
+export function holdScroll(hold) {
+  lenis?.[hold ? 'stop' : 'start']();
+  document.documentElement.style.overflow = hold ? 'hidden' : '';
+}
+
+/*
+ * Reveals play once and stay played. Not `once: true`: a once-trigger that's
+ * already scrolled past kills itself while it's still being created, and when
+ * the alias switches near the bottom of the page that happens to every reveal
+ * above you at once, which crashes ScrollTrigger's refresh.
+ */
+const REVEAL = { start: 'top 84%', toggleActions: 'play none none none' };
+
+/*
+ * Runs inside a gsap.context scoped to `root`; the caller reverts that context
+ * and calls the function this returns, which removes the DOM listeners.
+ */
 export function initMotion(root) {
   const rm = reduceMotion();
   const q = gsap.utils.selector(root);
+  const listeners = new AbortController();
+  const on = { signal: listeners.signal };
+  const cleanup = () => listeners.abort();
 
   // Final states, no animation.
   if (rm) {
     gsap.set(q('[data-words] .w, [data-reveal], [data-clip]'), { clearProps: 'all', autoAlpha: 1 });
-    return;
+    return cleanup;
   }
 
   /* --- Hero intro: media → kicker → title → copy → CTA --- */
@@ -54,7 +80,10 @@ export function initMotion(root) {
     tl.fromTo(q('[data-hero-media]'), { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.2 }, 0)
       .fromTo(q('[data-hero-media] .hero-photo'), { scale: 1.12 }, { scale: 1, duration: 1.5 }, 0)
       .fromTo(q('[data-hero-kicker]'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.25)
-      .fromTo(q('[data-hero-title] > *'), { yPercent: 110 }, { yPercent: 0, duration: 1, stagger: 0.09 }, 0.35)
+      // y: 0 on both ends: after an alias switch the CSS pre-state (translateY 110%)
+      // is already applied, and GSAP would otherwise keep it as an extra y offset,
+      // leaving the title parked below its mask.
+      .fromTo(q('[data-hero-title] > *'), { y: 0, yPercent: 110 }, { y: 0, yPercent: 0, duration: 1, stagger: 0.09 }, 0.35)
       .fromTo(q('[data-hero-copy]'), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 0.75)
       .fromTo(q('[data-hero-cta] > *'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08 }, 0.9)
       .fromTo(q('[data-hero-media] .bk'), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.5, stagger: 0.05 }, 1.0);
@@ -66,7 +95,7 @@ export function initMotion(root) {
     gsap.fromTo(words,
       { yPercent: 110, autoAlpha: 0 },
       { yPercent: 0, autoAlpha: 1, duration: 0.9, ease: 'power4.out', stagger: 0.05,
-        scrollTrigger: { trigger: el, start: 'top 84%', once: true } });
+        scrollTrigger: { trigger: el, ...REVEAL } });
   });
 
   /* --- Generic reveals --- */
@@ -74,13 +103,13 @@ export function initMotion(root) {
     gsap.fromTo(el,
       { y: 32, autoAlpha: 0 },
       { y: 0, autoAlpha: 1, duration: 0.9, ease: 'power4.out', delay: Number(el.dataset.revealDelay || 0),
-        scrollTrigger: { trigger: el, start: 'top 84%', once: true } });
+        scrollTrigger: { trigger: el, ...REVEAL } });
   });
 
   /* --- Clip reveals on photography --- */
   q('[data-clip]').forEach((fig) => {
     const img = fig.querySelector('img');
-    const tl = gsap.timeline({ scrollTrigger: { trigger: fig, start: 'top 82%', once: true } });
+    const tl = gsap.timeline({ scrollTrigger: { trigger: fig, ...REVEAL, start: 'top 82%' } });
     tl.fromTo(fig, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.1, ease: 'power4.out' })
       .fromTo(img, { scale: 1.08 }, { scale: 1, duration: 1.2, ease: 'power4.out' }, 0);
   });
@@ -94,7 +123,7 @@ export function initMotion(root) {
     });
   });
 
-  if (coarse()) return;
+  if (coarse()) return cleanup;
 
   /* --- Magnetic CTAs --- */
   q('[data-magnetic]').forEach((el) => {
@@ -105,8 +134,8 @@ export function initMotion(root) {
       const r = el.getBoundingClientRect();
       xTo((e.clientX - r.left - r.width / 2) * k);
       yTo((e.clientY - r.top - r.height / 2) * k);
-    });
-    el.addEventListener('pointerleave', () => { xTo(0); yTo(0); });
+    }, on);
+    el.addEventListener('pointerleave', () => { xTo(0); yTo(0); }, on);
   });
 
   /* --- Pointer depth in the hero --- */
@@ -122,10 +151,14 @@ export function initMotion(root) {
       const x = e.clientX - r.left - r.width / 2;
       const y = e.clientY - r.top - r.height / 2;
       layers.forEach(({ d, xTo, yTo }) => { xTo(x * d); yTo(y * d); });
-    });
-    hero.addEventListener('pointerleave', reset);
-    window.addEventListener('blur', reset);
+    }, on);
+    hero.addEventListener('pointerleave', reset, on);
+    // Used to pile up: one more window listener on every alias switch, all
+    // still pointing at the old, unmounted hero.
+    window.addEventListener('blur', reset, on);
   }
+
+  return cleanup;
 }
 
 export { gsap, ScrollTrigger };

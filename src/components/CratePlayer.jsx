@@ -12,7 +12,30 @@ const fmt = (ms) => {
   return `${m}:${String(s % 60).padStart(2, '0')}`;
 };
 
-export default function CratePlayer({ track, state, marker }) {
+export default function CratePlayer({ track, state, marker, empty, profileUrl }) {
+  // Nothing released under this alias yet: hold the slot, point at the profile.
+  if (!track) {
+    return (
+      <div className="crate-bar crate-bar--empty font-mono">
+        <span className="crate-play" aria-hidden="true">
+          <Icon icon="solar:record-bold" width="22" />
+        </span>
+        <div className="crate-now">
+          <span className="crate-now-tag">{marker} RESERVED</span>
+          <span className="crate-now-title">{empty}</span>
+        </div>
+        <span className="crate-time" aria-hidden="true">--:--</span>
+        <a className="crate-out" href={profileUrl} target="_blank" rel="noreferrer">
+          FOLLOW ON SOUNDCLOUD <Icon icon="solar:arrow-right-up-linear" width="14" aria-hidden="true" />
+        </a>
+        <div className="crate-progress" aria-hidden="true" />
+      </div>
+    );
+  }
+  return <Transport track={track} state={state} marker={marker} />;
+}
+
+function Transport({ track, state, marker }) {
   const { ready, playing, position, duration, toggle, seek } = state;
   const frac = duration ? position / duration : 0;
 

@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "sync": "node scripts/sync-soundcloud.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/sync-soundcloud.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

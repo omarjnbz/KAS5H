@@ -35,81 +35,84 @@ const BackgroundCanvas = ({ theme, isPlaying }) => {
     let glitchTimer = 0;
     let glitches = [];
 
-    const drawM0rf = (t) => {
-      // Deep tech background
-      ctx.fillStyle = '#080312';
-      ctx.fillRect(0, 0, width, height);
-
-      // Radial neon gradient behind mouse
-      const mouseGrad = ctx.createRadialGradient(
-        mouseRef.current.x,
-        mouseRef.current.y,
-        0,
-        mouseRef.current.x,
-        mouseRef.current.y,
-        width * 0.4
-      );
-      mouseGrad.addColorStop(0, 'rgba(57, 255, 20, 0.08)'); // Green neon
-      mouseGrad.addColorStop(0.5, 'rgba(167, 139, 250, 0.04)'); // Purple neon
-      mouseGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = mouseGrad;
-      ctx.fillRect(0, 0, width, height);
-
-      // Draw fluid liquid wave patterns (Bezier waves)
-      const waveCount = 5;
-      const points = 12;
-      const speedMultiplier = isPlaying ? 2.5 : 1.0;
-
-      for (let w = 0; w < waveCount; w++) {
-        ctx.beginPath();
-        const offset = w * (height / waveCount);
-        const amplitude = 30 + w * 15 + (isPlaying ? 20 : 0);
-        const waveSpeed = 0.002 * (w + 1) * speedMultiplier;
-        
-        ctx.moveTo(0, offset);
-
-        for (let i = 0; i <= points; i++) {
-          const x = (width / points) * i;
-          
-          // Calculate wave height with multiple sine waves and mouse interaction
-          const mouseDist = Math.abs(x - mouseRef.current.x);
-          const mouseInfluence = mouseDist < 300 ? (1 - mouseDist / 300) * 80 : 0;
-          
-          const y = offset + 
-            Math.sin(i * 0.5 + t * waveSpeed + w) * amplitude + 
-            Math.cos(i * 0.3 - t * waveSpeed * 1.5) * (amplitude / 2) +
-            (mouseRef.current.y - height / 2) * 0.1 * (1 - mouseDist / width) +
-            (Math.sin(t * 0.01) * mouseInfluence * (mouseRef.current.y > offset ? 1 : -1));
-
-          if (i === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            const prevX = (width / points) * (i - 1);
-            const prevY = offset + 
-              Math.sin((i - 1) * 0.5 + t * waveSpeed + w) * amplitude + 
-              Math.cos((i - 1) * 0.3 - t * waveSpeed * 1.5) * (amplitude / 2) +
-              (mouseRef.current.y - height / 2) * 0.1 * (1 - Math.abs(prevX - mouseRef.current.x) / width);
-
-            // Control points for smooth Bezier curve
-            const cpX = (prevX + x) / 2;
-            ctx.quadraticCurveTo(prevX, prevY, cpX, (prevY + y) / 2);
-          }
-        }
-
-        ctx.strokeStyle = w % 2 === 0 ? 'rgba(57, 255, 20, 0.12)' : 'rgba(167, 139, 250, 0.15)';
-        ctx.lineWidth = w === waveCount - 1 ? 2.5 : 1.2;
-        
-        // Glow effect for the thickest line
-        if (w === waveCount - 1) {
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = '#39ff14';
-        } else {
-          ctx.shadowBlur = 0;
-        }
-
-        ctx.stroke();
+    // M0rf: ice ground, a faint data grid, a stepped ultraviolet signal that
+    // leans toward the pointer, and now and then a fractured slice of screen.
+    let grid = null;
+    const buildGrid = () => {
+      grid = document.createElement('canvas');
+      grid.width = width;
+      grid.height = height;
+      const g = grid.getContext('2d');
+      g.fillStyle = 'rgba(11, 12, 20, 0.12)';
+      for (let y = 28; y < height; y += 28) {
+        for (let x = 28; x < width; x += 28) g.fillRect(x, y, 1.2, 1.2);
       }
-      ctx.shadowBlur = 0;
+      g.fillStyle = 'rgba(68, 34, 255, 0.22)';
+      for (let y = 112; y < height; y += 112) {
+        for (let x = 112; x < width; x += 112) { g.fillRect(x - 4, y, 9, 1); g.fillRect(x, y - 4, 1, 9); }
+      }
+    };
+    let slices = [];
+    let sliceTimer = 0;
+
+    const signal = (t, phase, color, lift) => {
+      const m = mouseRef.current;
+      const base = height * 0.64 + lift;
+      const amp = isPlaying ? 70 : 40;
+      const speed = isPlaying ? 0.035 : 0.016;
+      ctx.beginPath();
+      let prev = null;
+      for (let x = 0; x <= width + 16; x += 16) {
+        const near = Math.max(0, 1 - Math.abs(x - m.x) / 380);
+        const raw = Math.sin(x * 0.006 + t * speed + phase) * amp
+          + Math.sin(x * 0.021 - t * speed * 1.8) * amp * 0.4
+          + (m.y - base) * 0.3 * near;
+        const y = base + Math.round(raw / 10) * 10; // sample-and-hold steps, not a smooth curve
+        if (prev === null) ctx.moveTo(x, y);
+        else { ctx.lineTo(x, prev); ctx.lineTo(x, y); }
+        prev = y;
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    };
+
+    const drawM0rf = (t) => {
+      ctx.fillStyle = '#eceff4';
+      ctx.fillRect(0, 0, width, height);
+      if (!grid || grid.width !== width || grid.height !== height) buildGrid();
+      ctx.drawImage(grid, 0, 0);
+
+      signal(t, 1.4, 'rgba(183, 164, 255, 0.7)', 7);
+      signal(t, 0, 'rgba(68, 34, 255, 0.55)', 0);
+
+      ctx.fillStyle = 'rgba(11, 12, 20, 0.38)';
+      ctx.font = '10px "Space Mono", monospace';
+      ctx.fillText(`SIG/M0RF  CH-02  ${isPlaying ? 'LIVE' : 'IDLE'}`, 40, 90);
+      ctx.fillText('FOOTWORK 160 // IDM // BASS PRESSURE', 40, 106);
+      ctx.fillText(`T+${String(t).padStart(7, '0')}`, width - 120, height - 40);
+
+      // Fractures: copy a band of the frame sideways for a few frames.
+      sliceTimer += isPlaying ? 2 : 1;
+      if (sliceTimer > 110) {
+        sliceTimer = 0;
+        if (Math.random() < 0.55) {
+          slices = Array.from({ length: 1 + Math.floor(Math.random() * 3) }, () => ({
+            y: Math.random() * height,
+            h: 6 + Math.random() * 60,
+            dx: (Math.random() - 0.5) * 70,
+            life: 4 + Math.floor(Math.random() * 5),
+          }));
+        }
+      }
+      slices = slices.filter((s) => s.life-- > 0);
+      slices.forEach((s) => {
+        ctx.drawImage(canvas, 0, s.y, width, s.h, s.dx, s.y, width, s.h);
+        ctx.fillStyle = 'rgba(68, 34, 255, 0.06)';
+        ctx.fillRect(0, s.y, width, s.h);
+        ctx.fillStyle = 'rgba(68, 34, 255, 0.5)';
+        ctx.fillRect(0, s.y, width, 1);
+      });
     };
 
     const drawGarageSale = (t) => {
@@ -236,9 +239,11 @@ const BackgroundCanvas = ({ theme, isPlaying }) => {
         drawGarageSale(time);
       }
 
-      animationId = requestAnimationFrame(loop);
+      if (!still) animationId = requestAnimationFrame(loop);
     };
 
+    // Reduced motion: one frame, no loop.
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     loop();
 
     return () => {

@@ -6,9 +6,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
  * shows progress. The iframe itself stays in the DOM (SoundCloud needs it to
  * stream) but is visually hidden.
  *
- * Returns { ready, playing, position, duration, toggle, play, pause, seek }.
- * `trackId` is the SoundCloud track id; changing it loads the new track and,
- * if something was playing, keeps playing.
+ * Returns { ready, playing, position, duration, toggle, play, pause, playOnLoad, seek }.
+ * `trackId` is the SoundCloud track id (undefined = nothing to play); changing
+ * it loads the new track and, if something was playing, keeps playing.
+ * `bootId` is the track the iframe was created with.
  */
 const API = 'https://w.soundcloud.com/player/api.js';
 let apiPromise = null;
@@ -29,14 +30,14 @@ const loadApi = () => {
 
 export const trackUrl = (id) => `https://api.soundcloud.com/tracks/${id}`;
 
-export default function useSoundCloud(iframeRef, trackId) {
+export default function useSoundCloud(iframeRef, trackId, bootId) {
   const widget = useRef(null);
   const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const wasPlaying = useRef(false);
-  const loaded = useRef(trackId);
+  const loaded = useRef(bootId);
 
   useEffect(() => {
     let dead = false;
@@ -61,18 +62,20 @@ export default function useSoundCloud(iframeRef, trackId) {
   // Follow the chosen disc.
   useEffect(() => {
     const w = widget.current;
-    if (!w || !ready || loaded.current === trackId) return;
+    if (!w || !ready || !trackId || loaded.current === trackId) return;
     loaded.current = trackId;
-    setPosition(0);
     w.load(trackUrl(trackId), {
       auto_play: wasPlaying.current,
       show_artwork: false,
-      callback: () => w.getDuration((d) => setDuration(d)),
+      callback: () => { setPosition(0); w.getDuration((d) => setDuration(d)); },
     });
   }, [trackId, ready]);
 
   const play = useCallback(() => widget.current?.play(), []);
-  const pause = useCallback(() => widget.current?.pause(), []);
+  // Clear the intent immediately: a track change right after this must not autoplay.
+  const pause = useCallback(() => { wasPlaying.current = false; widget.current?.pause(); }, []);
+  // The next track change starts playing (used when "play the latest" picks another disc).
+  const playOnLoad = useCallback(() => { wasPlaying.current = true; }, []);
   const toggle = useCallback(() => widget.current?.toggle(), []);
   const seek = useCallback((frac) => {
     const w = widget.current;
@@ -80,5 +83,5 @@ export default function useSoundCloud(iframeRef, trackId) {
     w.seekTo(Math.max(0, Math.min(1, frac)) * duration);
   }, [duration]);
 
-  return { ready, playing, position, duration, play, pause, toggle, seek };
+  return { ready, playing, position, duration, play, pause, playOnLoad, toggle, seek };
 }
