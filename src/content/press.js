@@ -6,6 +6,7 @@
  * Folders must stay shared as "Anyone with the link".
  */
 import clips from './clips.json';
+import videoFiles from './videos.json';
 
 export const PHOTOS_FOLDER = 'https://drive.google.com/drive/folders/1yAEKO6m7KmORhViFiVblM_j_0cHQRjr5';
 export const VIDEOS_FOLDER = 'https://drive.google.com/drive/folders/1-3sSyD6JXhEPba7rLHuBZTPFeZqIs_A4';
@@ -50,21 +51,12 @@ export const PHOTOS = [
 ];
 
 /*
- * Clips. Drive's own player can't play these (the cuts are ~320 MB each), so
- * the site plays small web versions from public/press/clips/<slug>.mp4 instead.
- * A clip shows on the page once its file is listed in clips.json.
+ * Clips (list in videos.json, shared with scripts/make-clips.mjs). Drive's own
+ * player can't play these (the cuts are ~320 MB each), so the site plays web
+ * versions from public/press/clips/<slug>.mp4 instead. A clip appears on the
+ * page once make-clips has listed it in clips.json.
  */
-const VIDEO_FILES = [
-  { id: '1JLiwSTKXDOzaPLwUpCspLn1VlI8Pwrwu', slug: 'kas5h-promo-reel', name: 'KAS5H-promo-reel.mp4', label: 'PROMO REEL', poster: 'v01', w: 506, h: 900 },
-  { id: '16Wi51PoZGqvH0GdIxTsNgkeLofndNZxD', slug: 'kas5h-cut-01', name: 'KAS5H-cut-01.mp4', label: 'PROMO CUT 01', poster: 'v02', w: 900, h: 474 },
-  { id: '1uy2ZG-p6Q61LqylwBkCuOS4Z-xkIzeCp', slug: 'kas5h-cut-02', name: 'KAS5H-cut-02.mp4', label: 'PROMO CUT 02', poster: 'v03', w: 900, h: 474 },
-  { id: '1gHcP9LjWtyiHWFUUTEypZfIs4ZqgOqcq', slug: 'kas5h-cut-03', name: 'KAS5H-cut-03.mp4', label: 'PROMO CUT 03', poster: 'v04', w: 900, h: 474 },
-  { id: '13rhj04BB8yjqfHqOZFKa_9jER2Zkdgwg', slug: 'kas5h-cut-04', name: 'KAS5H-cut-04.mp4', label: 'PROMO CUT 04', poster: 'v05', w: 900, h: 474 },
-  { id: '1GVweRj7KV-xK19fwTy3MzDJIVffI14a8', slug: 'kas5h-live-01', name: 'KAS5H-live-01.mov', label: 'LIVE SET CLIP', poster: 'v06', w: 900, h: 505 },
-  { id: '1fW87oZjI4fgMLkVslKdNvCQY4JgxclV1', slug: 'kas5h-live-02', name: 'KAS5H-live-02.mov', label: 'LIVE SET CLIP', poster: 'v07', w: 506, h: 900 },
-];
-
-export const VIDEOS = VIDEO_FILES.map((v) => ({
+export const VIDEOS = videoFiles.map((v) => ({
   ...v,
   clip: clips[v.slug] ? `/press/clips/${v.slug}.mp4` : null,
   still: clips[v.slug]?.poster ? `/press/clips/${v.slug}.jpg` : `/promo/${v.poster}.jpg`,
