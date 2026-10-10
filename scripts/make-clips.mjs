@@ -17,8 +17,11 @@
  */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('..', import.meta.url).pathname;
+// fileURLToPath, not .pathname: the repo lives under "Documents - Omar's Mac",
+// and .pathname would keep the %20s.
+const root = fileURLToPath(new URL('..', import.meta.url));
 const videos = JSON.parse(readFileSync(`${root}src/content/videos.json`, 'utf8'));
 const manifestPath = `${root}src/content/clips.json`;
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
