@@ -19,6 +19,12 @@
   --font-body: 'Outfit', sans-serif;
   --font-mono: 'Space Mono', monospace;
 
+  /* Raised surfaces (the hero cards): white paper on the ice. */
+  --surface: #ffffff;
+  --surface-line: rgba(11, 12, 20, 0.06);
+  --surface-shadow: 0 1px 2px rgba(11, 12, 20, 0.04), 0 18px 40px -18px rgba(11, 12, 20, 0.22);
+  --nav-h: 72px;
+
   --transition-speed: 0.4s;
   --transition-ease: cubic-bezier(0.25, 1, 0.5, 1);
   --noise-opacity: 0.05;
@@ -40,6 +46,10 @@
   --font-body: 'Space Grotesk', sans-serif;
   --font-mono: 'Share Tech Mono', monospace;
   --noise-opacity: 0.15;
+
+  --surface: #141414;
+  --surface-line: rgba(255, 255, 255, 0.08);
+  --surface-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.9);
 }
 
 /* Global Reset */

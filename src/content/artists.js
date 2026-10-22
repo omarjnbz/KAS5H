@@ -6,8 +6,6 @@
  *   'm0rf'       = M0rf  — experimental, unpredictable. Day-lab: ice white +
  *                  ultraviolet, lifted from his blue-white studio shoot.
  */
-import portraitHero from '../assets/portrait-hero.jpg';
-import portraitMesh from '../assets/portrait-mesh.jpg';
 import djBooth from '../assets/dj-booth.png';
 import synced from './soundcloud.json';
 
@@ -23,6 +21,18 @@ export const BOOKING_EMAIL = 'bookings@kas5hmusik.com'; // TODO: confirm
  */
 export const INSTAGRAM_FEED = '';
 
+/*
+ * The hero stills: the blue-white studio shoot, cycling in the hero frame.
+ * Each has a subject mask (public/promo/masks, from scripts/subject-mask.swift)
+ * so the alias name can sit behind his head. Both aliases open on this shoot.
+ */
+const studio = (name) => [
+  { src: '/promo/p21.jpg', mask: '/promo/masks/p21.webp', alt: `${name} in a black mesh top, tattooed hand to his chest, against a blue-white wall` },
+  { src: '/promo/p20.jpg', mask: '/promo/masks/p20.webp', alt: `${name} looking away over his shoulder in a pale overshirt, washed in blue-white light` },
+  { src: '/promo/p19.jpg', mask: '/promo/masks/p19.webp', alt: `${name} with a tattooed, ringed hand at his chin, pale shirt over black mesh sleeves` },
+  { src: '/promo/p18.jpg', mask: '/promo/masks/p18.webp', alt: `${name} in sunglasses, tattooed hand raised to his face, in lilac light` },
+];
+
 const scEmbed = (trackId, hex, visual = true) =>
   `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A${trackId}` +
   `&color=%23${hex}&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=${visual}`;
@@ -36,7 +46,7 @@ export const ARTISTS = {
     themeColor: '#0a0a0a',
     frame: 'frame-garage',
     images: {
-      hero: { src: portraitHero, alt: 'KAS5H in a black suit, hair blurred into an orange streak against blue smoke' },
+      stills: studio('KAS5H'),
       bio: { src: djBooth, alt: 'KAS5H laughing over the decks, hands up in the crowd behind' },
       contact: { src: '/promo/p13.jpg', alt: 'KAS5H playing under blue club light' },
     },
@@ -92,7 +102,7 @@ export const ARTISTS = {
     themeColor: '#eceff4',
     frame: 'frame-lab',
     images: {
-      hero: { src: portraitMesh, alt: 'M0rf in a mesh top, hand to chest, washed in blue-white studio light' },
+      stills: studio('M0rf'),
       bio: { src: '/promo/p16.jpg', alt: 'M0rf at the decks under projected light' },
       contact: { src: '/promo/p18.jpg', alt: 'M0rf in sunglasses, tattooed hand raised, in lilac light' },
     },
@@ -104,6 +114,8 @@ export const ARTISTS = {
       lead: 'IDM textures, bass-driven pressure, footwork energy and fractured techno rhythms. Electronic music for listeners who want challenge and surprise over a comfort zone.',
       tag: 'SIGNAL_UNSTABLE // M0RF',
       cta: { label: 'BOOK M0RF', action: 'book', icon: 'solar:letter-bold' },
+      // The hero's middle card, until the first M0rf release is in the crate.
+      waiting: { title: 'First transmission incoming', line: 'M0rf releases show up in the crate within a day of going up on SoundCloud.' },
     },
     bio: {
       tag: 'TRANSMISSION // M0RF',

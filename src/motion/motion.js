@@ -73,20 +73,22 @@ export function initMotion(root) {
     return cleanup;
   }
 
-  /* --- Hero intro: media → kicker → title → copy → CTA --- */
+  /* --- Hero intro: frame → name → frame chrome → action → cards --- */
   const hero = root.querySelector('[data-hero]');
   if (hero) {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-    tl.fromTo(q('[data-hero-media]'), { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.2 }, 0)
-      .fromTo(q('[data-hero-media] .hero-photo'), { scale: 1.12 }, { scale: 1, duration: 1.5 }, 0)
-      .fromTo(q('[data-hero-kicker]'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.25)
+    tl.fromTo(q('[data-hero-media]'), { clipPath: 'inset(0 0 100% 0 round 28px)' }, { clipPath: 'inset(0 0 0% 0 round 28px)', duration: 1.2 }, 0)
+      // One wrapper scales photo, name and cutout together, so the cutout never slips.
+      .fromTo(q('[data-hero-media] .stage-zoom'), { scale: 1.12 }, { scale: 1, duration: 1.5 }, 0)
       // y: 0 on both ends: after an alias switch the CSS pre-state (translateY 110%)
       // is already applied, and GSAP would otherwise keep it as an extra y offset,
       // leaving the title parked below its mask.
-      .fromTo(q('[data-hero-title] > *'), { y: 0, yPercent: 110 }, { y: 0, yPercent: 0, duration: 1, stagger: 0.09 }, 0.35)
-      .fromTo(q('[data-hero-copy]'), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 0.75)
-      .fromTo(q('[data-hero-cta] > *'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08 }, 0.9)
-      .fromTo(q('[data-hero-media] .bk'), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.5, stagger: 0.05 }, 1.0);
+      .fromTo(q('[data-hero-title] > *'), { y: 0, yPercent: 110 }, { y: 0, yPercent: 0, duration: 1.1 }, 0.35)
+      .fromTo(q('[data-hero-chrome]'), { autoAlpha: 0, y: -8 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.06 }, 0.7)
+      .fromTo(q('[data-hero-cta] > *'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.8)
+      .fromTo(q('[data-hero-cards] > *'), { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.09 }, 0.85)
+      // Leave the clip off once it's open: a clip-path would cut the frame's shadow.
+      .set(q('[data-hero-media]'), { clearProps: 'clipPath' });
   }
 
   /* --- Word reveals (markup pre-split by <Words/>) --- */

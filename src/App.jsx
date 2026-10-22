@@ -5,6 +5,7 @@ import Nav from './components/Nav';
 import Ticker from './components/Ticker';
 import Words from './components/Words';
 import TextDistort from './components/TextDistort';
+import HeroStage from './components/HeroStage';
 import PressReel from './components/PressReel';
 import InstagramFeed from './components/InstagramFeed';
 import Name from './components/Name';
@@ -15,11 +16,15 @@ import switchFeedback from './lib/switchFeedback';
 import {
   ARTISTS, releasesFor, FIRST_RELEASE, SOUNDCLOUD, INSTAGRAM, INSTAGRAM_FEED, BOOKING_EMAIL, embedSrc,
 } from './content/artists';
+import { PHOTOS } from './content/press';
 import { gsap, ScrollTrigger, initMotion, startLenis, stopLenis, jumpTo } from './motion/motion';
 import './App.css';
 
 /* The track the hidden player boots with: the newest KAS5H release (the site opens on KAS5H). */
 const BOOT = releasesFor('garagesale')[0] ?? FIRST_RELEASE;
+
+/* Thumbs in the hero's press card: three other shoots, so it reads as a kit. */
+const PRESS_FACES = ['p13', 'p02', 'p16'];
 
 /* Discs that hold the place for an alias with nothing out yet: generated labels, no audio. */
 const RESERVED_PALETTES = [
@@ -92,7 +97,7 @@ function App() {
     startLenis();
     const onLoad = () => {
       ScrollTrigger.refresh();
-      Object.values(ARTISTS).forEach((x) => { new Image().src = x.images.hero.src; });
+      Object.values(ARTISTS).forEach((x) => x.images.stills.forEach((s) => { new Image().src = s.src; }));
     };
     window.addEventListener('load', onLoad);
     document.fonts?.ready.then(() => ScrollTrigger.refresh());
@@ -113,6 +118,10 @@ function App() {
     ScrollTrigger.refresh();
     return () => { cleanup?.(); ctx.revert(); };
   }, [theme]);
+
+  const latest = releases[0];
+  // The lead's first sentence plain, the rest in bold.
+  const lead = a.hero.lead.split(/(?<=\.)\s+(.*)/s);
 
   const discs = releases.length
     ? releases.map((r) => ({ title: r.title, credits: r.credits, src: r.cover, alt: `${r.title} cover`, label: '' }))
@@ -140,48 +149,66 @@ function App() {
       )}
 
       <div ref={root} key={theme}>
-        {/* 1. HERO */}
-        <section className="hero-section container" data-hero>
-          <div className="hero-grid">
-            <div className="hero-content" data-depth="0.012">
-              <div className="hero-subtitle font-mono" data-hero-kicker>{a.marker} {a.hero.kicker}</div>
+        {/* 1. HERO — the frame: studio stills with the name behind his head. Hanging
+            off its foot, the main action and three cards: the sound, the latest
+            release, the press kit. */}
+        <section className="hero" data-hero>
+          <HeroStage name={a.name} stills={a.images.stills} marker={a.marker} kicker={a.hero.kicker} tag={a.hero.tag} />
 
-              <h1 className="hero-title font-heading" data-hero-title>
-                <span><TextDistort text={a.hero.title} theme={theme} /></span>
-                <span className="text-stroke">{a.hero.stroke}</span>
-              </h1>
-
-              <p className="hero-desc" data-hero-copy>{a.hero.lead}</p>
-
-              <div className="hero-cta" data-hero-cta>
-                {a.hero.cta.action === 'play' && current ? (
-                  // Straight to the crate, playing. Lenis handles the anchor.
-                  <a href="#tracks" className="btn-primary btn-primary--solid" data-magnetic onClick={playLatest}>
-                    <Icon icon={a.hero.cta.icon} width="16" aria-hidden="true" /> {a.hero.cta.label}
-                  </a>
-                ) : (
-                  <a href="#book" className="btn-primary btn-primary--solid" data-magnetic>
-                    {/* One span: the button is a flex row, and a bare <Name> would make
-                        the zero its own flex item with a gap either side. */}
-                    <Icon icon={a.hero.cta.icon} width="16" aria-hidden="true" /> <span><Name text={a.hero.cta.label} /></span>
-                  </a>
-                )}
-                <a href={SOUNDCLOUD} target="_blank" rel="noreferrer" className="hero-link font-mono">
-                  SOUNDCLOUD <Icon icon="solar:arrow-right-up-linear" width="14" aria-hidden="true" />
+          <div className="hero-foot">
+            <div className="hero-action" data-hero-cta>
+              {a.hero.cta.action === 'play' && current ? (
+                // Straight to the crate, playing. Lenis handles the anchor.
+                <a href="#tracks" className="hero-pill font-mono" data-magnetic onClick={playLatest}>
+                  <Icon icon={a.hero.cta.icon} width="16" aria-hidden="true" /> {a.hero.cta.label}
                 </a>
-              </div>
+              ) : (
+                <a href="#book" className="hero-pill font-mono" data-magnetic>
+                  {/* One span: the pill is a flex row, and a bare <Name> would make
+                      the zero its own flex item with a gap either side. */}
+                  <Icon icon={a.hero.cta.icon} width="16" aria-hidden="true" /> <span><Name text={a.hero.cta.label} /></span>
+                </a>
+              )}
             </div>
 
-            <div className="hero-visual" data-depth="0.025">
-              <div className={`hero-photo-frame ${a.frame}`} data-hero-media>
-                <img src={a.images.hero.src} alt={a.images.hero.alt} className="hero-photo" fetchPriority="high" />
-                <div className="hero-photo-grain" />
-                <div className="hero-photo-brackets">
-                  <span className="bk bk-tl" /><span className="bk bk-tr" />
-                  <span className="bk bk-bl" /><span className="bk bk-br" />
-                </div>
-                <span className="hero-photo-tag font-mono">{a.hero.tag}</span>
-              </div>
+            <div className="hero-cards" data-hero-cards>
+              <article className="hero-card hero-card--sound">
+                <p className="hero-card-icons" aria-hidden="true">
+                  <Icon icon="solar:headphones-round-sound-linear" width="22" />
+                  <Icon icon="solar:music-note-2-linear" width="20" />
+                </p>
+                <p className="hero-card-lead">
+                  {lead[0]} {lead[1] && <strong>{lead[1]}</strong>}
+                </p>
+                <a href="#bio" className="hero-card-link font-mono">
+                  Read the bio <Icon icon="solar:arrow-right-linear" width="14" aria-hidden="true" />
+                </a>
+              </article>
+
+              <article className="hero-card hero-card--latest">
+                <p className="hero-card-kicker font-mono">{a.marker} {latest ? 'Latest release' : 'Transmissions'}</p>
+                <h2 className="hero-card-title font-heading">{latest ? latest.title : a.hero.waiting.title}</h2>
+                <p className="hero-card-meta">
+                  {latest
+                    ? latest.credits.filter((c) => c.label !== 'Artist').map((c) => c.value).join(' · ')
+                    : a.hero.waiting.line}
+                </p>
+                <a href="#tracks" className="hero-card-link font-mono">
+                  The crate <Icon icon="solar:arrow-right-linear" width="14" aria-hidden="true" />
+                </a>
+              </article>
+
+              <article className="hero-card hero-card--press">
+                <p className="hero-card-kicker font-mono">{a.marker} Press kit</p>
+                <a href="#press" className="hero-press">
+                  <span className="hero-press-faces" aria-hidden="true">
+                    {PRESS_FACES.map((f) => <img key={f} src={`/promo/thumbs/${f}.jpg`} alt="" loading="lazy" />)}
+                  </span>
+                  <span className="hero-press-count font-heading">{PHOTOS.length}</span>
+                  <span className="hero-press-unit font-mono">photos</span>
+                </a>
+                <p className="hero-card-meta">Every photo from the shoots, full size, ready to download for flyers and press.</p>
+              </article>
             </div>
           </div>
         </section>
