@@ -428,6 +428,36 @@
   .stage-kicker, .stage-count { display: none; }
 }
 
+/* ---------- KAS5H's film ----------
+   .film is the film's stage, the rounded room inside the picture; the video
+   overhangs it by the film's own margins onto a page of the same #0a0a0a, and its
+   outer edge fades so it never reads as a box over the background canvas.
+     wide:  stage 1600×800 at 160,90 of 1920×1080 → video 120% wide, up 11.25%
+     phone: stage 960×1180 at 60,60 of 1080×1350 → video 112.5% wide, up 5.085% */
+.film {
+  --film-w: 120%; --film-x: -10%; --film-y: -11.25%; --film-fade: 5%;
+  position: relative; width: 100%; aspect-ratio: 2 / 1;
+}
+.film--phone {
+  --film-w: 112.5%; --film-x: -6.25%; --film-y: -5.085%; --film-fade: 3%;
+  aspect-ratio: 960 / 1180;
+}
+.film-media {
+  position: absolute; left: var(--film-x); top: var(--film-y); width: var(--film-w); height: auto;
+  display: block; pointer-events: none; user-select: none;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 var(--film-fade), #000 calc(100% - var(--film-fade)), transparent),
+    linear-gradient(to bottom, transparent, #000 var(--film-fade), #000 calc(100% - var(--film-fade)), transparent);
+  mask-image:
+    linear-gradient(to right, transparent, #000 var(--film-fade), #000 calc(100% - var(--film-fade)), transparent),
+    linear-gradient(to bottom, transparent, #000 var(--film-fade), #000 calc(100% - var(--film-fade)), transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.film .stage-tag, .film .stage-kicker, .film .stage-controls { z-index: 1; }
+/* filter, not opacity: the hero intro owns these chips' opacity inline. */
+.film-fade { transition: filter 0.35s ease; }
+.film.is-apart .film-fade { filter: opacity(0); }
+
 /* ---------- Hero: the foot ----------
    The main action straddles the frame's edge; three cards hang below it,
    fanned a degree or so either way on wide screens. */

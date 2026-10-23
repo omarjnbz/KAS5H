@@ -22,9 +22,9 @@ export const BOOKING_EMAIL = 'bookings@kas5hmusik.com'; // TODO: confirm
 export const INSTAGRAM_FEED = '';
 
 /*
- * The hero stills: the blue-white studio shoot, cycling in the hero frame.
+ * M0rf's hero stills: the blue-white studio shoot, cycling in the hero frame.
  * Each has a subject mask (public/promo/masks, from scripts/subject-mask.swift)
- * so the alias name can sit behind his head. Both aliases open on this shoot.
+ * so the alias name can sit behind his head.
  */
 const studio = (name) => [
   { src: '/promo/p21.jpg', mask: '/promo/masks/p21.webp', alt: `${name} in a black mesh top, tattooed hand to his chest, against a blue-white wall` },
@@ -46,7 +46,6 @@ export const ARTISTS = {
     themeColor: '#0a0a0a',
     frame: 'frame-garage',
     images: {
-      stills: studio('KAS5H'),
       bio: { src: djBooth, alt: 'KAS5H laughing over the decks, hands up in the crowd behind' },
       contact: { src: '/promo/p13.jpg', alt: 'KAS5H playing under blue club light' },
     },
@@ -58,6 +57,17 @@ export const ARTISTS = {
       lead: 'Romanian minimal, deeptech, deep hypnotic with trance textures, tech house, UKG and left-field sounds. Tight grooves, rolling basslines, melancholic vocals.',
       tag: 'SUBJECT_LOCKED // KAS5H',
       cta: { label: 'PLAY THE LATEST', action: 'play', icon: 'solar:play-bold' },
+      /*
+       * The hero is a film, not the stills: one photo (p21) and its subject mask, made
+       * in HyperFrames (../kas5h-hyperframes). public/hero holds the site cuts, rendered
+       * without tag or action, re-encoded for the web: wide 1920×1080 and phone 1080×1350,
+       * each with its last frame as a still for reduced motion.
+       */
+      film: {
+        wide: { src: '/hero/kas5h-film-wide.mp4', end: '/hero/kas5h-film-wide-end.jpg' },
+        phone: { src: '/hero/kas5h-film-phone.mp4', end: '/hero/kas5h-film-phone-end.jpg' },
+        alt: 'KAS5H in a black mesh top, tattooed hand to his chest, with the name KAS5H set huge behind his head',
+      },
     },
     bio: {
       tag: 'LIVE // IN THE BOOTH',

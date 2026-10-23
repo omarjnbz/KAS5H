@@ -6,6 +6,7 @@ import Ticker from './components/Ticker';
 import Words from './components/Words';
 import TextDistort from './components/TextDistort';
 import HeroStage from './components/HeroStage';
+import HeroFilm from './components/HeroFilm';
 import PressReel from './components/PressReel';
 import InstagramFeed from './components/InstagramFeed';
 import Name from './components/Name';
@@ -97,7 +98,7 @@ function App() {
     startLenis();
     const onLoad = () => {
       ScrollTrigger.refresh();
-      Object.values(ARTISTS).forEach((x) => x.images.stills.forEach((s) => { new Image().src = s.src; }));
+      Object.values(ARTISTS).forEach((x) => x.images.stills?.forEach((s) => { new Image().src = s.src; }));
     };
     window.addEventListener('load', onLoad);
     document.fonts?.ready.then(() => ScrollTrigger.refresh());
@@ -149,11 +150,15 @@ function App() {
       )}
 
       <div ref={root} key={theme}>
-        {/* 1. HERO — the frame: studio stills with the name behind his head. Hanging
-            off its foot, the main action and three cards: the sound, the latest
-            release, the press kit. */}
+        {/* 1. HERO — KAS5H: the film, one photo with the name behind his head.
+            M0rf: the studio stills, cycling, the same trick. Hanging off the foot,
+            the main action and three cards: the sound, the latest release, the press kit. */}
         <section className="hero" data-hero>
-          <HeroStage name={a.name} stills={a.images.stills} marker={a.marker} kicker={a.hero.kicker} tag={a.hero.tag} />
+          {a.hero.film ? (
+            <HeroFilm name={a.name} film={a.hero.film} marker={a.marker} kicker={a.hero.kicker} tag={a.hero.tag} />
+          ) : (
+            <HeroStage name={a.name} stills={a.images.stills} marker={a.marker} kicker={a.hero.kicker} tag={a.hero.tag} />
+          )}
 
           <div className="hero-foot">
             <div className="hero-action" data-hero-cta>
